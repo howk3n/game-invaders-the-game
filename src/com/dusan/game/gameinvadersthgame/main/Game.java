@@ -2,10 +2,14 @@ package com.dusan.game.gameinvadersthgame.main;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
+import javax.swing.JFrame;
+
 import com.dusan.game.gameinvadersthgame.common.Constants;
+import com.dusan.game.gameinvadersthgame.gameobjects.Player;
 
 public class Game extends Canvas implements Runnable{
 	
@@ -20,27 +24,56 @@ public class Game extends Canvas implements Runnable{
 	private static Color BACKGROUND_COLOR = Constants.DEFAULT_BACKGROUND_COLOR;
 	private HUD hud;
 	public static int currentLevel;	
+	public static int score;
 	
-	private Game(){	
-		Handler.init();
+	private void initFrame(int width, int height, String title){
+		JFrame frame = new JFrame(title);
+		frame.setPreferredSize(new Dimension(width, height));
+		frame.setMaximumSize(new Dimension(width, height));
+		frame.setMinimumSize(new Dimension(width, height));
+		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.add(this);
+		frame.setVisible(true);
+	}
+	
+	private Game(int width, int height, String title){	
+		
+		initFrame(WIDTH,HEIGHT, title);
+		GameObjectManager.init();
 		hud = HUD.getInstance();
 		this.addKeyListener(KeyInput.getInstance());
 		
 		currentLevel=1;
-		Handler.initLevel(currentLevel);
+		GameObjectManager.initLevel(currentLevel);
+		Player.lives = Constants.PLAYER_STARTING_LIVES;
+		this.start();
 		
-		new DefaultWindow(WIDTH, HEIGHT, "Game Invaders Try 2", this);
 	}
 	
 	public static Game getInstance(){
 		
 		if(instance == null){
-			instance = new Game();
+			instance = new Game(WIDTH, HEIGHT, "Game Invaders The Game");
 		}
 		return instance;
 		
 	}
-
+	
+	public static void incrementScore(int points){
+		score += points;
+	}
+	
+	public static void gameOver(){
+		
+	}
+	
+	public static void nextLevel(){
+		currentLevel++;
+		GameObjectManager.initLevel(currentLevel);
+	}
 	
 
 	public synchronized void start(){
@@ -92,7 +125,7 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	private void tick(){
-		Handler.tick();
+		GameObjectManager.tick();
 		hud.tick();
 	}
 	
@@ -109,23 +142,11 @@ public class Game extends Canvas implements Runnable{
 		g.setColor(BACKGROUND_COLOR);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
-		Handler.render(g);
+		GameObjectManager.render(g);
 		hud.render(g);
 		
 		g.dispose();
 		bs.show();
-		
-	}
-	
-	public static int clamp(int var, int min, int max){
-		
-		if(var >= max){
-			return var = max;
-		}
-		else if(var <= min){
-			return var = min;
-		}
-		else return var;
 		
 	}
 	

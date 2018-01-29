@@ -1,10 +1,10 @@
 package com.dusan.game.gameinvadersthgame.gameobjects;
 
-import com.dusan.game.gameinvadersthgame.common.ID;
+import com.dusan.game.gameinvadersthgame.common.GOID;
 
 public abstract class Bullet extends GameObject{
 
-	public Bullet(int x, int y, ID id) {
+	public Bullet(int x, int y, GOID id) {
 		super(x, y, id);
 	}
 
@@ -15,5 +15,6 @@ public abstract class Bullet extends GameObject{
 	}
 	
 	protected abstract void collision();
+//	Eventually remove collision from Bullet and all inheriting classes, and instead create a CollisionManager which answers only to Handler class.
 
 }

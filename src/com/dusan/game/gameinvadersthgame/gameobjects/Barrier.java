@@ -6,22 +6,21 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import com.dusan.game.gameinvadersthgame.common.Constants;
-import com.dusan.game.gameinvadersthgame.common.ID;
-import com.dusan.game.gameinvadersthgame.main.Handler;
+import com.dusan.game.gameinvadersthgame.common.GOID;
+import com.dusan.game.gameinvadersthgame.main.GameObjectManager;
 
 public class Barrier extends GameObject{
 
 	private int health;
 	private float alpha;
 	
-	public Barrier(int x, int y, ID id) {
+	public Barrier(int x, int y, GOID id) {
 		super(x, y, id);
 		this.width = Constants.DEFAULT_BASIC_BARRIER_WIDTH;
 		this.height = Constants.DEFAULT_BASIC_BARRIER_HEIGHT;
 		this.color = Constants.DEFAULT_PLAYER_COLOR;
 		this.health = 50;
 		this.alpha = 1.0f;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -33,11 +32,11 @@ public class Barrier extends GameObject{
 	@Override
 	public void render(Graphics g){
 		if(health <=0){
-			Handler.removeObject(this);
+			GameObjectManager.removeObject(this);
 		}
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.setColor(this.color);
-		alpha = 1.0f - ((50 - health) * 0.01f);
+		alpha = 0.5f + health * 0.01f;
 		AlphaComposite alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
 		g2d.setComposite(alcom);
 		g2d.fillRect(x, y, this.width, this.height);

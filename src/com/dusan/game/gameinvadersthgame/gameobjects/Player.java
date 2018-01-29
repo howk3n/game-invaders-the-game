@@ -1,27 +1,23 @@
 package com.dusan.game.gameinvadersthgame.gameobjects;
 
 import com.dusan.game.gameinvadersthgame.common.Constants;
-import com.dusan.game.gameinvadersthgame.common.ID;
-import com.dusan.game.gameinvadersthgame.main.Handler;
+import com.dusan.game.gameinvadersthgame.common.GOID;
+import com.dusan.game.gameinvadersthgame.main.GameObjectManager;
 
-public class Player extends GameObject implements CanShoot {
+public class Player extends GameObject {
 	
 	public enum PlayerMove { LEFT, RIGHT };
-	private static Player instance;
 	public static int lives;
+	public boolean isDying;
+	private int speed;
 	
-	protected Player(int x, int y, ID id) {
+	protected Player(int x, int y, GOID id) {
 		super(x, y, id);
 		this.width = Constants.DEFAULT_PLAYER_WIDTH;
 		this.height = Constants.DEFAULT_PLAYER_HEIGHT;
 		this.color = Constants.DEFAULT_PLAYER_COLOR;
-	}
-	
-	public static Player getInstance(){
-		if(instance == null){
-			instance = new Player(Constants.DEFAULT_BASIC_BARRIER_WIDTH + ((Constants.DEFAULT_BASIC_BARRIER_WIDTH-Constants.DEFAULT_PLAYER_WIDTH)/2), Constants.DEFAULT_SCREEN_HEIGHT - Constants.DEFAULT_PLAYER_HEIGHT * 2, ID.Player);
-		}
-		return instance;
+		this.speed = 5;
+		this.isDying = false;
 	}
 
 	@Override
@@ -31,10 +27,10 @@ public class Player extends GameObject implements CanShoot {
 	
 	public void move(PlayerMove direction){		
 		if(direction == PlayerMove.LEFT){
-			setVelX(-5);
+			setVelX(-1 * speed);
 		}
 		else{
-			setVelX(5);
+			setVelX(speed);
 		}
 	}
 	
@@ -42,11 +38,24 @@ public class Player extends GameObject implements CanShoot {
 		setVelX(0);
 	}
 
-	@Override
 	public void shoot() {
-		if(Handler.playerHasBullet()==false){
-			Handler.makeObject(this.getX() + this.getWidth()/2, this.getY(), ID.PlayerBullet);
+		if(GameObjectManager.playerHasBullet()==false){
+			try {
+				GameObjectManager.makeObject(this.getX() + this.getWidth()/2, this.getY(), GOID.PlayerBullet);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+		
+	}
+	
+	public void die(){
+		this.isDying = true;
+
+		// todo for each gameobject : death animation
+		
+		GameObjectManager.removeObject(this);
+		
 		
 	}
 

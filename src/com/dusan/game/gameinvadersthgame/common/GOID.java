@@ -1,12 +1,11 @@
 package com.dusan.game.gameinvadersthgame.common;
 
-public enum ID {
+public enum GOID {
 	Player(),
-	BasicAlien(),
+	JuniorAlien(),
 	MediorAlien(),
 	SeniorAlien(),
 	FlyingSaucer(),
-	
 	PlayerBullet(),
 	AlienBullet(),
 	Barrier()

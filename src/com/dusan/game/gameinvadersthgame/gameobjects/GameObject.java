@@ -4,16 +4,17 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-import com.dusan.game.gameinvadersthgame.common.ID;
+import com.dusan.game.gameinvadersthgame.common.GOID;
+import com.dusan.game.gameinvadersthgame.common.Math;
 import com.dusan.game.gameinvadersthgame.main.Game;
 
 public abstract class GameObject{
 
 	protected int x, y, width, height, health, velX, velY;
 	protected Color color;
-	protected ID id;
+	protected GOID id;
 
-	public GameObject(int x, int y, ID id){
+	public GameObject(int x, int y, GOID id){
 		this.x = x;
 		this.y = y;
 		this.id = id;
@@ -23,17 +24,20 @@ public abstract class GameObject{
 		x+=velX;
 		y+=velY;
 		
-		x = Game.clamp(x, 0, Game.WIDTH - 72);
-		y = Game.clamp(y, 0, Game.HEIGHT - 64);
+		x = Math.clamp(x, 0, Game.WIDTH - 72);
+		y = Math.clamp(y, 0, Game.HEIGHT - 64);
 	}
 	
 	public void render(Graphics g){
 		g.setColor(color);
 		g.fillRect(x, y, width, height);
 	}
+	
 	public Rectangle getBounds(){
 		return new Rectangle(x, y, width, height);
 	};
+	
+//	public abstract void die(); todo: death animations
 	
 	public abstract String toString();
 	
@@ -94,11 +98,11 @@ public abstract class GameObject{
 		this.health = health;
 	}
 
-	public ID getId() {
+	public GOID getId() {
 		return id;
 	}
 
-	public void setId(ID id) {
+	public void setId(GOID id) {
 		this.id = id;
 	}
 	
