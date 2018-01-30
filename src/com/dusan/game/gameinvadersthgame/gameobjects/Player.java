@@ -7,9 +7,10 @@ import com.dusan.game.gameinvadersthgame.main.GameObjectManager;
 public class Player extends GameObject {
 	
 	public enum PlayerMove { LEFT, RIGHT };
-	public static int lives;
+	public int lives;
 	public boolean isDying;
 	private int speed;
+
 	
 	protected Player(int x, int y, GOID id) {
 		super(x, y, id);
@@ -22,20 +23,20 @@ public class Player extends GameObject {
 
 	@Override
 	public String toString() {
-		return "Player\nX position: "+x+"\nY position: "+y+"\nWidth: "+width+"\nHeight: "+height+"\nID: "+id;
+		return "Player\nX position: " + x + "\nY position: " + y + "\nWidth: " + width + "\nHeight: " + height + "\nID: " + id;
 	}
 	
 	public void move(PlayerMove direction){		
 		if(direction == PlayerMove.LEFT){
-			setVelX(-1 * speed);
+			this.setVelX(-1 * speed);
 		}
 		else{
-			setVelX(speed);
+			this.setVelX(speed);
 		}
 	}
 	
 	public void stop(){
-		setVelX(0);
+		this.setVelX(0);
 	}
 
 	public void shoot() {
@@ -54,7 +55,15 @@ public class Player extends GameObject {
 
 		// todo for each gameobject : death animation
 		
-		GameObjectManager.removeObject(this);
+//		GameObjectManager.removeObject(this);
+		System.out.println(this.getX() + ": currentX");
+		System.out.println(Constants.PLAYER_STARTING_X + ": should be new X");
+		this.setX(Constants.PLAYER_STARTING_X);
+		System.out.println(this.getX() + ": new X");
+		
+		this.lives--;
+		
+		this.isDying = false;
 		
 		
 	}

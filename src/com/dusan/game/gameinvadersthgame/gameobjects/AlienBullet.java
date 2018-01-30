@@ -23,30 +23,9 @@ public class AlienBullet extends Bullet{
 		if(y >= Game.HEIGHT){
 			GameObjectManager.removeObject(this);
 		}
-		
 		x = Math.clamp(x, 0, Game.WIDTH);
-		
-		collision();
 	}
-	
-	@Override
-	protected void collision(){
-		for(int i = 0; i < GameObjectManager.allObjectsSize(); i++){
-			GameObject tempObject = GameObjectManager.getObjectAt(i);
-			if(tempObject instanceof Player){
-				if(getBounds().intersects(tempObject.getBounds())){
-					GameObjectManager.removeObject(this);
-					GameObjectManager.killPlayer();
-				}
-			}
-			if(tempObject instanceof Barrier){
-				if(getBounds().intersects(tempObject.getBounds())){
-					((Barrier)tempObject).takeDamage();
-					GameObjectManager.removeObject(this);
-				}
-			}
-		}
-	}
+
 
 
 }

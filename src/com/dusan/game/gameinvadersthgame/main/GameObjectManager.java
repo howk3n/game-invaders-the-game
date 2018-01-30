@@ -112,19 +112,16 @@ public class GameObjectManager {
 	}
 	
 	public static void killPlayer(){
-		getPlayer().die();
-		
-		Player.lives--;
-		if(Player.lives == 0){
-			getPlayer().die();
-			Game.gameOver();
-		} else{
-			getPlayer().die();
-			try {
-				makeObject(80, Game.HEIGHT-Constants.DEFAULT_PLAYER_HEIGHT, GOID.Player);
-			} catch (Exception e) {
-				e.printStackTrace();
+		Player player = getPlayer();
+		if(player.lives <= 1){
+			for(int i = 0; i < allObjects.size(); i++){
+				removeObject(allObjects.get(i));
 			}
+			Game.gameOver();
+		}
+		else{
+			player.die();
+			System.out.println("GameObjectManager says die player.");
 		}
 	}
 	
@@ -166,7 +163,7 @@ public class GameObjectManager {
 	public static void initLevel(int level){
 		if(level == 1){ // 80
 			try {
-				makeObject(Constants.DEFAULT_BASIC_BARRIER_WIDTH + (Constants.DEFAULT_BASIC_BARRIER_WIDTH - Constants.DEFAULT_PLAYER_WIDTH) / 2, Game.HEIGHT-Constants.DEFAULT_PLAYER_HEIGHT, GOID.Player);
+				makeObject(Constants.PLAYER_STARTING_X, Constants.PLAYER_STARTING_Y, GOID.Player);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -223,6 +220,12 @@ public class GameObjectManager {
 		
 //		System.out.println(current - previous);
 //		System.out.println("movetimer : " + moveTimer);
+		
+		
+		if(allAliensAreDead()){
+			Game.nextLevel();
+		}
+		
 		if(moveTimer >= 1000){
 			alienMove = true;
 			moveTimer = 0;
@@ -249,6 +252,9 @@ public class GameObjectManager {
 		for(int i = 0; i < allObjects.size(); i++){
 			
 			GameObject currentObject = allObjects.get(i);
+
+//			CollisionManager.getInstance().checkCollision(currentObject, allObjects, i);
+			CollisionManager.getInstance().doCollision(currentObject, allObjects, i);
 			
 			if(currentObject instanceof Alien){
 				

@@ -9,7 +9,6 @@ import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 
 import com.dusan.game.gameinvadersthgame.common.Constants;
-import com.dusan.game.gameinvadersthgame.gameobjects.Player;
 
 public class Game extends Canvas implements Runnable{
 	
@@ -37,6 +36,7 @@ public class Game extends Canvas implements Runnable{
 		frame.setLocationRelativeTo(null);
 		frame.add(this);
 		frame.setVisible(true);
+		this.requestFocusInWindow();
 	}
 	
 	private Game(int width, int height, String title){	
@@ -48,7 +48,7 @@ public class Game extends Canvas implements Runnable{
 		
 		currentLevel=1;
 		GameObjectManager.initLevel(currentLevel);
-		Player.lives = Constants.PLAYER_STARTING_LIVES;
+		GameObjectManager.getPlayer().lives = Constants.PLAYER_STARTING_LIVES;
 		this.start();
 		
 	}
