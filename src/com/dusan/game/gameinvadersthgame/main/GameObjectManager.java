@@ -105,7 +105,9 @@ public class GameObjectManager {
 		alienMove = false;
 		alienShoot = false;
 		playerHasBullet = false;
+
 		
+		Player.lives = Constants.PLAYER_STARTING_LIVES;
 		current = 0;
 		previous = 0;
 		
@@ -113,10 +115,8 @@ public class GameObjectManager {
 	
 	public static void killPlayer(){
 		Player player = getPlayer();
-		if(player.lives <= 1){
-			for(int i = 0; i < allObjects.size(); i++){
-				removeObject(allObjects.get(i));
-			}
+		if(Player.lives <= 1){
+//			allObjects.clear();
 			Game.gameOver();
 		}
 		else{
@@ -163,7 +163,7 @@ public class GameObjectManager {
 	public static void initLevel(int level){
 		if(level == 1){ // 80
 			try {
-				makeObject(Constants.PLAYER_STARTING_X, Constants.PLAYER_STARTING_Y, GOID.Player);
+				makeObject(Game.PLAYER_STARTING_X, Game.PLAYER_STARTING_Y, GOID.Player);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -249,12 +249,13 @@ public class GameObjectManager {
 		alienPositions.setBaseline();
 		playerHasBullet = false;
 		
+		CollisionManager.getInstance().tick();
+		
 		for(int i = 0; i < allObjects.size(); i++){
 			
 			GameObject currentObject = allObjects.get(i);
 
-//			CollisionManager.getInstance().checkCollision(currentObject, allObjects, i);
-			CollisionManager.getInstance().doCollision(currentObject, allObjects, i);
+//			CollisionManager.getInstance().doCollision(i);
 			
 			if(currentObject instanceof Alien){
 				
@@ -355,6 +356,9 @@ public class GameObjectManager {
 	}
 	public static GameObject getObjectAt(int i) {
 		return allObjects.get(i);
+	}
+	public static LinkedList<GameObject> getAllObjects(){
+		return allObjects;
 	}
 	public static boolean playerHasBullet(){
 		return playerHasBullet;

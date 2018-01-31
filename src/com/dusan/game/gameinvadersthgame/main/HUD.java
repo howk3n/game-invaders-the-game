@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import com.dusan.game.gameinvadersthgame.common.Constants;
+import com.dusan.game.gameinvadersthgame.gameobjects.Player;
 
 public class HUD {
 	
@@ -27,7 +28,7 @@ public class HUD {
 		g.fillRect(0, 0, Game.WIDTH, Constants.HUD_HEIGHT);
 		g.setColor(Color.white);
 		g.drawString("Score: " + Game.score, Constants.HUD_HEIGHT / 2, Constants.HUD_HEIGHT / 2);
-		g.drawString("Lives left: " + GameObjectManager.getPlayer().lives, Game.WIDTH - Constants.HUD_HEIGHT * 2, Constants.HUD_HEIGHT / 2);
+		g.drawString("Lives left: " + Player.lives, Game.WIDTH - Constants.HUD_HEIGHT * 2, Constants.HUD_HEIGHT / 2);
 	}
 
 }

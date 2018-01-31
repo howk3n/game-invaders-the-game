@@ -2,8 +2,6 @@ package com.dusan.game.gameinvadersthgame.common;
 
 import java.awt.Color;
 
-import com.dusan.game.gameinvadersthgame.main.Game;
-
 public class Constants {
 	public static final Color DEFAULT_BACKGROUND_COLOR = Color.BLACK;
 	public static final int DEFAULT_SCREEN_WIDTH = 640;
@@ -29,8 +27,8 @@ public class Constants {
 	public static final int DEFAULT_PLAYER_WIDTH = DEFAULT_SCREEN_WIDTH * 3 / 40; //48
 	public static final int DEFAULT_PLAYER_HEIGHT = DEFAULT_SCREEN_WIDTH / 32; //20
 	public static final Color DEFAULT_PLAYER_COLOR = Color.WHITE;
-	public static final int PLAYER_STARTING_X = DEFAULT_BASIC_BARRIER_WIDTH + (DEFAULT_BASIC_BARRIER_WIDTH - DEFAULT_PLAYER_WIDTH) / 2;
-	public static final int PLAYER_STARTING_Y = Game.HEIGHT - DEFAULT_PLAYER_HEIGHT;
+//	public static final int PLAYER_STARTING_X = DEFAULT_BASIC_BARRIER_WIDTH + (DEFAULT_BASIC_BARRIER_WIDTH - DEFAULT_PLAYER_WIDTH) / 2;
+//	public static final int PLAYER_STARTING_Y = Game.HEIGHT - DEFAULT_PLAYER_HEIGHT;
 	public static final int PLAYER_STARTING_LIVES = 3;
 	public static final int PLAYER_BULLET_WIDTH = 5;
 	public static final int PLAYER_BULLET_HEIGHT = 10;

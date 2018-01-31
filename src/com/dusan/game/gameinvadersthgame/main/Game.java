@@ -24,6 +24,8 @@ public class Game extends Canvas implements Runnable{
 	private HUD hud;
 	public static int currentLevel;	
 	public static int score;
+	public static int PLAYER_STARTING_X = Constants.DEFAULT_BASIC_BARRIER_WIDTH + (Constants.DEFAULT_BASIC_BARRIER_WIDTH - Constants.DEFAULT_PLAYER_WIDTH) / 2;
+	public static int PLAYER_STARTING_Y = HEIGHT - Constants.DEFAULT_PLAYER_HEIGHT;
 	
 	private void initFrame(int width, int height, String title){
 		JFrame frame = new JFrame(title);
@@ -48,7 +50,6 @@ public class Game extends Canvas implements Runnable{
 		
 		currentLevel=1;
 		GameObjectManager.initLevel(currentLevel);
-		GameObjectManager.getPlayer().lives = Constants.PLAYER_STARTING_LIVES;
 		this.start();
 		
 	}

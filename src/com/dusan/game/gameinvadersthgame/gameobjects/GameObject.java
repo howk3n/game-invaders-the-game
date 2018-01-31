@@ -2,7 +2,6 @@ package com.dusan.game.gameinvadersthgame.gameobjects;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 
 import com.dusan.game.gameinvadersthgame.common.GOID;
 import com.dusan.game.gameinvadersthgame.common.Math;
@@ -32,10 +31,6 @@ public abstract class GameObject{
 		g.setColor(color);
 		g.fillRect(x, y, width, height);
 	}
-	
-	public Rectangle getBounds(){
-		return new Rectangle(x, y, width, height);
-	};
 	
 //	public abstract void die(); todo: death animations
 	

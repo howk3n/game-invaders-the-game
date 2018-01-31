@@ -31,32 +31,7 @@ public class PlayerBullet extends Bullet {
 		
 		x = Math.clamp(x, 0, Game.WIDTH);
 		
-//		collision();
-		
 	}
 	
-//	@Override
-//	protected void collision(){
-//		for(int i = 0; i < GameObjectManager.allObjectsSize(); i++){
-//			GameObject tempObject = GameObjectManager.getObjectAt(i);
-//			if(tempObject instanceof Alien || tempObject instanceof FlyingSaucer){
-//				if(getBounds().intersects(tempObject.getBounds())){
-//					if(tempObject instanceof Alien){
-//						GameObjectManager.getPoints((Alien)tempObject);
-//					} else{
-//						GameObjectManager.getPoints((FlyingSaucer)tempObject);
-//					}
-//					GameObjectManager.removeObject(tempObject);
-//					GameObjectManager.removeObject(this);
-//				}
-//			}
-//			if(tempObject instanceof Barrier){
-//				if(getBounds().intersects(tempObject.getBounds())){
-//					((Barrier)tempObject).takeDamage();
-//					GameObjectManager.removeObject(this);
-//				}
-//			}
-//		}
-//	}	
 
 }

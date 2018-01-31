@@ -2,12 +2,13 @@ package com.dusan.game.gameinvadersthgame.gameobjects;
 
 import com.dusan.game.gameinvadersthgame.common.Constants;
 import com.dusan.game.gameinvadersthgame.common.GOID;
+import com.dusan.game.gameinvadersthgame.main.Game;
 import com.dusan.game.gameinvadersthgame.main.GameObjectManager;
 
 public class Player extends GameObject {
 	
 	public enum PlayerMove { LEFT, RIGHT };
-	public int lives;
+	public static int lives;
 	public boolean isDying;
 	private int speed;
 
@@ -57,11 +58,11 @@ public class Player extends GameObject {
 		
 //		GameObjectManager.removeObject(this);
 		System.out.println(this.getX() + ": currentX");
-		System.out.println(Constants.PLAYER_STARTING_X + ": should be new X");
-		this.setX(Constants.PLAYER_STARTING_X);
+		System.out.println(Game.PLAYER_STARTING_X + ": should be new X");
+		this.setX(Game.PLAYER_STARTING_X);
 		System.out.println(this.getX() + ": new X");
 		
-		this.lives--;
+		lives--;
 		
 		this.isDying = false;
 		

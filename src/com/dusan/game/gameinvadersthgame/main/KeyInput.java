@@ -24,7 +24,7 @@ public class KeyInput extends KeyAdapter{
 	private Player player;
 	
 	public void keyPressed(KeyEvent e){
-		if(!(GameObjectManager.getPlayer()==null && GameObjectManager.getPlayer().isDying)){
+		if(!(GameObjectManager.getPlayer()==null || GameObjectManager.getPlayer().isDying)){
 			player = GameObjectManager.getPlayer();
 			int keyCode = e.getKeyCode();
 			keysPressed.put(keyCode, true);
@@ -49,7 +49,7 @@ public class KeyInput extends KeyAdapter{
 	}
 	
 	public void keyReleased(KeyEvent e){
-		if(GameObjectManager.getPlayer()!=null && !GameObjectManager.getPlayer().isDying){
+		if(GameObjectManager.getPlayer()!=null || !GameObjectManager.getPlayer().isDying){
 			player = GameObjectManager.getPlayer();
 			int keyCode = e.getKeyCode();
 			if(keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT){
