@@ -10,7 +10,7 @@ public class AlienBullet extends Bullet{
 
 	public AlienBullet(int x, int y, GOID id) {
 		super(x, y, id);
-		this.velY = 3;
+		this.velY = 5;
 		this.color = Constants.ALIEN_BULLET_COLOR;
 		this.width = Constants.ALIEN_BULLET_WIDTH;
 		this.height = Constants.ALIEN_BULLET_HEIGHT;

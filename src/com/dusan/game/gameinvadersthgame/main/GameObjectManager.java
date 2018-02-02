@@ -71,17 +71,19 @@ public class GameObjectManager {
 	private static AlienBulletFactory abf;
 	private static PlayerBulletFactory pbf;
 	private static BarrierFactory barf;
-	private static long moveTimer;
-	private static long shootTimer;
+	private static double gameSpeed;
+	private static double moveTimer;
+	private static double shootTimer;
+	private static double flyingSaucerTimer;
 	private static AlienMove alienDirection;
+	private static int numberOfAliens;
 	private static HashMap<Integer, Alien> lowestAliens;
 	private static Random randomGenerator;
 	private static boolean alienMove;
 	private static boolean alienShoot;
+	private static boolean flyingSaucerAppear;
+	private static boolean flyingSaucerExists;
 	private static boolean playerHasBullet;
-	
-	private static long current;
-	private static long previous;
 	
 	public static void init() {
 		
@@ -97,19 +99,21 @@ public class GameObjectManager {
 		abf = new AlienBulletFactory();
 		pbf = new PlayerBulletFactory();
 		barf = new BarrierFactory();
+		gameSpeed = 1;
 		moveTimer = 0;
 		shootTimer = 0;
+		flyingSaucerTimer = 0;
 		alienDirection = AlienMove.RIGHT;
 		lowestAliens = new HashMap<Integer, Alien>();
 		randomGenerator = new Random();
 		alienMove = false;
 		alienShoot = false;
+		flyingSaucerAppear = false;
+		flyingSaucerExists = false;
 		playerHasBullet = false;
 
 		
 		Player.lives = Constants.PLAYER_STARTING_LIVES;
-		current = 0;
-		previous = 0;
 		
 	}
 	
@@ -138,16 +142,6 @@ public class GameObjectManager {
 			}
 		}
 		return lowestAliens;
-	}
-	
-	public static boolean allAliensAreDead(){
-		boolean allDead = true;
-		for(int i = 0; i < allObjectsSize(); i++){
-			if(allObjects.get(i) instanceof Alien){
-				allDead = false;
-			}
-		}
-		return allDead;
 	}
 	
 	public static Player getPlayer(){
@@ -202,9 +196,25 @@ public class GameObjectManager {
 						e.printStackTrace();
 					}
 				}
+				numberOfAliens++;
 			}
 		}
 		
+	}
+	
+	private static void flyingSaucerAppears(){
+		int sl;
+		if(randomGenerator.nextInt(2) == 1){
+			sl = -1;
+		}
+		else{
+			sl = Game.WIDTH / Constants.FLYING_SAUCER_WIDTH;
+		}
+		try {
+			makeObject(sl * Constants.FLYING_SAUCER_WIDTH, Constants.HUD_HEIGHT + Constants.FLYING_SAUCER_HEIGHT / 2, GOID.FlyingSaucer);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 
@@ -215,18 +225,13 @@ public class GameObjectManager {
 //		Another way (which Unity uses) is implement a static class or singleton called GameTime, with a field called deltaTime. Game class would set that value in each tick,
 //		and whoever needs that value can just check the GameTime class.
 		
-		previous = current;
-		current = System.currentTimeMillis();
-		
-//		System.out.println(current - previous);
-//		System.out.println("movetimer : " + moveTimer);
-		
-		
-		if(allAliensAreDead()){
+		if(numberOfAliens == 0){
 			Game.nextLevel();
+		}else{
+			gameSpeed = 1 + Game.currentLevel * 0.012 * (Constants.getTotalAliensPerLevel(Game.currentLevel) - numberOfAliens);
 		}
 		
-		if(moveTimer >= 1000){
+		if(moveTimer >= 1 / gameSpeed){
 			alienMove = true;
 			moveTimer = 0;
 			if((alienDirection == AlienMove.RIGHT && alienPositions.maxX >= Game.WIDTH - Constants.ALIEN_WIDTH[Constants.JUNIOR] - Constants.ALIEN_HORIZONTAL_SPEED) || (alienDirection == AlienMove.LEFT && alienPositions.minX <= 0)){
@@ -240,10 +245,17 @@ public class GameObjectManager {
 			}
 		}
 		
-		if(shootTimer>=3750){
+		if(shootTimer>=3.75 / gameSpeed){
 			alienShoot = true;
 			shootTimer = 0;
 			lowestAliens = getLowestAliens();
+		}
+		
+		if(flyingSaucerTimer>=5){
+			flyingSaucerTimer = 0;
+			if(randomGenerator.nextInt(5) == 4){
+				flyingSaucerAppears();
+			}
 		}
 		
 		alienPositions.setBaseline();
@@ -251,6 +263,8 @@ public class GameObjectManager {
 		
 		CollisionManager.getInstance().tick();
 		
+		int newNumberOfAliens = 0;
+		flyingSaucerExists = false;
 		for(int i = 0; i < allObjects.size(); i++){
 			
 			GameObject currentObject = allObjects.get(i);
@@ -258,6 +272,7 @@ public class GameObjectManager {
 //			CollisionManager.getInstance().doCollision(i);
 			
 			if(currentObject instanceof Alien){
+				newNumberOfAliens++;
 				
 				alienPositions.expandValueRanges(currentObject.getX(), currentObject.getY());
 				
@@ -276,7 +291,20 @@ public class GameObjectManager {
 					}
 				}
 			}
-			
+			numberOfAliens = newNumberOfAliens;
+			if(currentObject instanceof FlyingSaucer){
+				flyingSaucerExists = true;
+				System.out.println(currentObject.getVelX());
+				int newVelX;
+				if(currentObject.getVelX()>0){
+					newVelX = (int)Math.floor((Constants.FLYING_SAUCER_BASE_VELOCITY + Game.currentLevel / 2) + (0.05 * (Constants.getTotalAliensPerLevel(Game.currentLevel) - numberOfAliens)));
+				}
+				else{
+					newVelX = (int)Math.floor((int)(-1 * Constants.FLYING_SAUCER_BASE_VELOCITY - Game.currentLevel / 2) - (0.05 * (Constants.getTotalAliensPerLevel(Game.currentLevel) - numberOfAliens)));
+				}
+				currentObject.setVelX(newVelX);
+				System.out.println(currentObject.getVelX());
+			}
 			currentObject.tick();
 			
 			
@@ -285,17 +313,26 @@ public class GameObjectManager {
 			}
 			
 		}
-		
 		if(!alienMove){
-			moveTimer += (current - previous);
-		}else{
+			moveTimer += GameTime.delta;
+			
+		}
+		else{
 			alienMove = false;
 		}
 		if(!alienShoot){
-			shootTimer += (current - previous);
-		}else{
+			shootTimer += GameTime.delta;
+		}
+		else{
 			alienShoot = false;
 		}
+		if(!flyingSaucerAppear && !flyingSaucerExists){
+			flyingSaucerTimer += GameTime.delta;
+		}
+		else{
+			flyingSaucerAppear = false;
+		}
+		
 	}
 
 	public static void render(Graphics g){

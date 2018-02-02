@@ -97,6 +97,7 @@ public class Game extends Canvas implements Runnable{
 	public void run(){
 		
 		long lastTime = System.nanoTime();
+		long tickLastTime = System.nanoTime();
 		double amountOfTicks = 60.0;
 		double ns = 1000000000 / amountOfTicks;
 		double delta = 0;
@@ -107,6 +108,9 @@ public class Game extends Canvas implements Runnable{
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			while(delta >= 1) {
+				long tickNow = System.nanoTime();
+				GameTime.delta = ((double) (tickNow - tickLastTime)) / 1000000000;
+				tickLastTime = tickNow;
 				tick();
 				delta--;
 			}
@@ -128,6 +132,7 @@ public class Game extends Canvas implements Runnable{
 	private void tick(){
 		GameObjectManager.tick();
 		hud.tick();
+		
 	}
 	
 	private void render(){

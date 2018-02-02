@@ -10,7 +10,7 @@ public class PlayerBullet extends Bullet {
 
 	public PlayerBullet(int x, int y, GOID id) {
 		super(x, y, id);
-		this.velY = -5;
+		this.velY = -7;
 		this.color = Constants.PLAYER_BULLET_COLOR;
 		this.width = Constants.PLAYER_BULLET_WIDTH;
 		this.height = Constants.PLAYER_BULLET_HEIGHT;
