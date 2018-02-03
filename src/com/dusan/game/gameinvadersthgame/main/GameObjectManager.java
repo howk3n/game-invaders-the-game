@@ -9,6 +9,7 @@ import com.dusan.game.gameinvadersthgame.common.Constants;
 import com.dusan.game.gameinvadersthgame.common.GOID;
 import com.dusan.game.gameinvadersthgame.gameobjects.Alien;
 import com.dusan.game.gameinvadersthgame.gameobjects.Alien.AlienMove;
+import com.dusan.game.gameinvadersthgame.gameobjects.AlienBullet;
 import com.dusan.game.gameinvadersthgame.gameobjects.AlienBulletFactory;
 import com.dusan.game.gameinvadersthgame.gameobjects.BarrierFactory;
 import com.dusan.game.gameinvadersthgame.gameobjects.FlyingSaucer;
@@ -72,17 +73,13 @@ public class GameObjectManager {
 	private static PlayerBulletFactory pbf;
 	private static BarrierFactory barf;
 	private static double gameSpeed;
-	private static double moveTimer;
-	private static double shootTimer;
-	private static double flyingSaucerTimer;
+	private static double gameTimer;
 	private static AlienMove alienDirection;
 	private static int numberOfAliens;
 	private static HashMap<Integer, Alien> lowestAliens;
 	private static Random randomGenerator;
 	private static boolean alienMove;
 	private static boolean alienShoot;
-	private static boolean flyingSaucerAppear;
-	private static boolean flyingSaucerExists;
 	private static boolean playerHasBullet;
 	
 	public static void init() {
@@ -100,16 +97,12 @@ public class GameObjectManager {
 		pbf = new PlayerBulletFactory();
 		barf = new BarrierFactory();
 		gameSpeed = 1;
-		moveTimer = 0;
-		shootTimer = 0;
-		flyingSaucerTimer = 0;
+		gameTimer = 0;
 		alienDirection = AlienMove.RIGHT;
 		lowestAliens = new HashMap<Integer, Alien>();
 		randomGenerator = new Random();
 		alienMove = false;
 		alienShoot = false;
-		flyingSaucerAppear = false;
-		flyingSaucerExists = false;
 		playerHasBullet = false;
 
 		
@@ -155,7 +148,7 @@ public class GameObjectManager {
 	}
 	
 	public static void initLevel(int level){
-		if(level == 1){ // 80
+		if(level == 0){
 			try {
 				makeObject(Game.PLAYER_STARTING_X, Game.PLAYER_STARTING_Y, GOID.Player);
 			} catch (Exception e1) {
@@ -169,6 +162,9 @@ public class GameObjectManager {
 				}
 			}
 		}
+		else{
+			Player.lives++;
+		}
 		
 		int x = 0;
 		int y = 0;
@@ -176,7 +172,7 @@ public class GameObjectManager {
 		for(int i = 0; i < Constants.ALIEN_COLUMN_COUNT; i++){
 			for(int j = 0; j<alienRows; j++){
 				x = Constants.ALIEN_HORIZONTAL_SPEED * 20 + ((Constants.ALIEN_WIDTH[Constants.JUNIOR] + Constants.ALIEN_HORIZONTAL_SPEED * 2) * i);
-				y = Constants.HUD_HEIGHT + Constants.HUD_HEIGHT / 2  + j * (Constants.ALIEN_HEIGHT + Constants.ALIEN_VERTICAL_SPEED);
+				y = Constants.HUD_HEIGHT + Constants.FLYING_SAUCER_HEIGHT + Constants.ALIEN_HORIZONTAL_SPEED * 2  + j * (Constants.ALIEN_HEIGHT + Constants.ALIEN_VERTICAL_SPEED);
 				if(Constants.ALIENS_PER_LEVEL[level][Constants.SENIOR] / Constants.ALIEN_COLUMN_COUNT >= j + 1){
 					try {
 						makeObject(x+(Constants.ALIEN_WIDTH[Constants.JUNIOR] - Constants.ALIEN_WIDTH[Constants.SENIOR]) / 2, y, GOID.SeniorAlien);
@@ -203,37 +199,28 @@ public class GameObjectManager {
 	}
 	
 	private static void flyingSaucerAppears(){
-		int sl;
-		if(randomGenerator.nextInt(2) == 1){
-			sl = -1;
-		}
-		else{
-			sl = Game.WIDTH / Constants.FLYING_SAUCER_WIDTH;
-		}
 		try {
-			makeObject(sl * Constants.FLYING_SAUCER_WIDTH, Constants.HUD_HEIGHT + Constants.FLYING_SAUCER_HEIGHT / 2, GOID.FlyingSaucer);
+			makeObject(9999, Constants.HUD_HEIGHT, GOID.FlyingSaucer);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("Flying Saucer Appears!");
 	}
 	
 
 	
 	public static void tick(){
-//		This class should not have the responsibility of keeping time between ticks, that should belong to the Game class.
-//		One way to do it it make all tick() methods receive a parameter called deltaTime (which is difference between current and previous tick).
-//		Another way (which Unity uses) is implement a static class or singleton called GameTime, with a field called deltaTime. Game class would set that value in each tick,
-//		and whoever needs that value can just check the GameTime class.
 		
 		if(numberOfAliens == 0){
 			Game.nextLevel();
 		}else{
-			gameSpeed = 1 + Game.currentLevel * 0.012 * (Constants.getTotalAliensPerLevel(Game.currentLevel) - numberOfAliens);
+			gameSpeed = 1 + (1 + Game.currentLevel) * 0.015 * (Constants.getTotalAliensPerLevel(Game.currentLevel) - numberOfAliens);
 		}
 		
-		if(moveTimer >= 1 / gameSpeed){
+		if(gameTimer >= 1 / gameSpeed){
+			gameTimer = 0;
+//			Alien Movement
 			alienMove = true;
-			moveTimer = 0;
 			if((alienDirection == AlienMove.RIGHT && alienPositions.maxX >= Game.WIDTH - Constants.ALIEN_WIDTH[Constants.JUNIOR] - Constants.ALIEN_HORIZONTAL_SPEED) || (alienDirection == AlienMove.LEFT && alienPositions.minX <= 0)){
 				alienDirection = AlienMove.DOWN;
 			} else if(alienDirection == AlienMove.DOWN){
@@ -243,19 +230,16 @@ public class GameObjectManager {
 					alienDirection = AlienMove.RIGHT;
 				}
 			}
-		}
-		
-		if(shootTimer>=3.75 / gameSpeed){
+			
+//			Alien Shootment
 			alienShoot = true;
-			shootTimer = 0;
 			lowestAliens = getLowestAliens();
-		}
-		
-		if(flyingSaucerTimer>=5){
-			flyingSaucerTimer = 0;
-			if(randomGenerator.nextInt(5) == 4){
+			
+//			Flying Saucer Spawnment
+			if(randomGenerator.nextInt(30) == 29){
 				flyingSaucerAppears();
 			}
+			
 		}
 		
 		alienPositions.setBaseline();
@@ -264,12 +248,9 @@ public class GameObjectManager {
 		CollisionManager.getInstance().tick();
 		
 		int newNumberOfAliens = 0;
-		flyingSaucerExists = false;
 		for(int i = 0; i < allObjects.size(); i++){
 			
 			GameObject currentObject = allObjects.get(i);
-
-//			CollisionManager.getInstance().doCollision(i);
 			
 			if(currentObject instanceof Alien){
 				newNumberOfAliens++;
@@ -286,24 +267,21 @@ public class GameObjectManager {
 				}
 				if(alienShoot){
 					
-					if(lowestAliens.containsValue(currentObject) && (1 + randomGenerator.nextInt(5))>4){
+					if(lowestAliens.containsValue(currentObject) && (randomGenerator.nextInt(25)) >= 23){
 						((Alien) currentObject).shouldShoot = true;
 					}
 				}
 			}
 			numberOfAliens = newNumberOfAliens;
 			if(currentObject instanceof FlyingSaucer){
-				flyingSaucerExists = true;
-				System.out.println(currentObject.getVelX());
 				int newVelX;
-				if(currentObject.getVelX()>0){
-					newVelX = (int)Math.floor((Constants.FLYING_SAUCER_BASE_VELOCITY + Game.currentLevel / 2) + (0.05 * (Constants.getTotalAliensPerLevel(Game.currentLevel) - numberOfAliens)));
+				if(currentObject.getVelX() > 0){
+					newVelX = (int)Math.floor((Constants.FLYING_SAUCER_BASE_VELOCITY + (Game.currentLevel + 1) / 3) + (0.04 * (Constants.getTotalAliensPerLevel(Game.currentLevel) - numberOfAliens)));
 				}
 				else{
-					newVelX = (int)Math.floor((int)(-1 * Constants.FLYING_SAUCER_BASE_VELOCITY - Game.currentLevel / 2) - (0.05 * (Constants.getTotalAliensPerLevel(Game.currentLevel) - numberOfAliens)));
+					newVelX = (int)Math.floor((int)(-1 * Constants.FLYING_SAUCER_BASE_VELOCITY - (Game.currentLevel + 1) / 3) - (0.04 * (Constants.getTotalAliensPerLevel(Game.currentLevel) - numberOfAliens)));
 				}
 				currentObject.setVelX(newVelX);
-				System.out.println(currentObject.getVelX());
 			}
 			currentObject.tick();
 			
@@ -313,25 +291,9 @@ public class GameObjectManager {
 			}
 			
 		}
-		if(!alienMove){
-			moveTimer += GameTime.delta;
-			
-		}
-		else{
-			alienMove = false;
-		}
-		if(!alienShoot){
-			shootTimer += GameTime.delta;
-		}
-		else{
-			alienShoot = false;
-		}
-		if(!flyingSaucerAppear && !flyingSaucerExists){
-			flyingSaucerTimer += GameTime.delta;
-		}
-		else{
-			flyingSaucerAppear = false;
-		}
+		gameTimer += GameTime.delta;
+		alienShoot = false;
+		alienMove = false;
 		
 	}
 
@@ -380,6 +342,13 @@ public class GameObjectManager {
 			throw new Exception("Unidentified object type. Cannot reference to a factory.");		
 		}
 		addObject(factory.getObject(x, y, id));
+	}
+	
+	public static void makeAlienBulletWithVelocity(int x, int y, int velX, int velY){
+		AlienBullet tempBullet = (AlienBullet) abf.getObject(x, y, GOID.AlienBullet);
+		tempBullet.setVelX(velX);
+		tempBullet.setVelY(velY);
+		addObject(tempBullet);
 	}
 	
 	public static void addObject(GameObject o){

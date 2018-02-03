@@ -8,7 +8,6 @@ public abstract class Alien extends GameObject {
 	
 	public enum AlienMove {DOWN, LEFT, RIGHT, NONE };
 	
-	private float movementCooldown;
 	public int points;
 	public boolean shouldShoot;
 	public AlienMove shouldMoveInDirection;
@@ -19,14 +18,6 @@ public abstract class Alien extends GameObject {
 		this.color = Constants.ALIEN_COLOR;
 		this.shouldShoot = false;
 		this.shouldMoveInDirection = AlienMove.NONE;
-		this.movementCooldown = movementCooldown;
-	}
-	
-	public float getMovementCooldown() {
-		return movementCooldown;
-	}
-	public void setMovementCooldown(float movementCooldown) {
-		this.movementCooldown = movementCooldown;
 	}
 	
 	@Override

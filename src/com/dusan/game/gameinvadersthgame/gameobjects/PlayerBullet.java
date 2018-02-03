@@ -2,7 +2,7 @@ package com.dusan.game.gameinvadersthgame.gameobjects;
 
 import com.dusan.game.gameinvadersthgame.common.Constants;
 import com.dusan.game.gameinvadersthgame.common.GOID;
-import com.dusan.game.gameinvadersthgame.common.Math;
+import com.dusan.game.gameinvadersthgame.common.MyMath;
 import com.dusan.game.gameinvadersthgame.main.Game;
 import com.dusan.game.gameinvadersthgame.main.GameObjectManager;
 
@@ -29,7 +29,7 @@ public class PlayerBullet extends Bullet {
 			GameObjectManager.removeObject(this);
 		}
 		
-		x = Math.clamp(x, 0, Game.WIDTH);
+		x = MyMath.clamp(x, 0, Game.WIDTH);
 		
 	}
 	

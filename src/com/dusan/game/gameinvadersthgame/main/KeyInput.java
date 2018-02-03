@@ -15,7 +15,7 @@ public class KeyInput extends KeyAdapter{
 			instance = new KeyInput();
 			instance.keysPressed = new HashMap<Integer, Boolean>();
 			instance.keysPressed.put(KeyEvent.VK_LEFT, false);
-			instance.keysPressed.put(KeyEvent.VK_RIGHT, true);
+			instance.keysPressed.put(KeyEvent.VK_RIGHT, false);
 		}
 		return instance;
 	}

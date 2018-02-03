@@ -12,7 +12,6 @@ public class Constants {
 	public static final int MEDIOR = 1;
 	public static final int SENIOR = 2;
 	public static final int [][] ALIENS_PER_LEVEL = {
-			{0,0,0},
 			{22,22,11},
 			{22,22,22},
 			{22,33,11},
@@ -49,7 +48,7 @@ public class Constants {
 	public static final Color FLYING_SAUCER_COLOR = Color.RED;
 	public static final int FLYING_SAUCER_WIDTH = 64;
 	public static final int FLYING_SAUCER_HEIGHT = 16;
-	public static final int FLYING_SAUCER_BASE_VELOCITY = 3;
+	public static final int FLYING_SAUCER_BASE_VELOCITY = 2;
 	
 	public static int getTotalAliensPerLevel(int level){
 		return ALIENS_PER_LEVEL[level][JUNIOR] + ALIENS_PER_LEVEL[level][MEDIOR] + ALIENS_PER_LEVEL[level][SENIOR];

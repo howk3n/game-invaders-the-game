@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import com.dusan.game.gameinvadersthgame.common.GOID;
-import com.dusan.game.gameinvadersthgame.common.Math;
+import com.dusan.game.gameinvadersthgame.common.MyMath;
 import com.dusan.game.gameinvadersthgame.main.Game;
 
 public abstract class GameObject{
@@ -23,8 +23,8 @@ public abstract class GameObject{
 		x+=velX;
 		y+=velY;
 		
-		x = Math.clamp(x, 0, Game.WIDTH - 72);
-		y = Math.clamp(y, 0, Game.HEIGHT - 64);
+		x = MyMath.clamp(x, 0, Game.WIDTH - 72);
+		y = MyMath.clamp(y, 0, Game.HEIGHT - 64);
 	}
 	
 	public void render(Graphics g){

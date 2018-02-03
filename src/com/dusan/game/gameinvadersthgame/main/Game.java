@@ -26,16 +26,18 @@ public class Game extends Canvas implements Runnable{
 	public static int score;
 	public static int PLAYER_STARTING_X = Constants.DEFAULT_BASIC_BARRIER_WIDTH + (Constants.DEFAULT_BASIC_BARRIER_WIDTH - Constants.DEFAULT_PLAYER_WIDTH) / 2;
 	public static int PLAYER_STARTING_Y = HEIGHT - Constants.DEFAULT_PLAYER_HEIGHT;
+//	private static boolean isPlaying = false;
 	
 	private void initFrame(int width, int height, String title){
 		JFrame frame = new JFrame(title);
 		frame.setPreferredSize(new Dimension(width, height));
 		frame.setMaximumSize(new Dimension(width, height));
 		frame.setMinimumSize(new Dimension(width, height));
-		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
+		
+		
 		frame.add(this);
 		frame.setVisible(true);
 		this.requestFocusInWindow();
@@ -44,11 +46,11 @@ public class Game extends Canvas implements Runnable{
 	private Game(int width, int height, String title){	
 		
 		initFrame(WIDTH,HEIGHT, title);
-		GameObjectManager.init();
+
 		hud = HUD.getInstance();
 		this.addKeyListener(KeyInput.getInstance());
-		
-		currentLevel=1;
+		GameObjectManager.init();
+		currentLevel = 0;
 		GameObjectManager.initLevel(currentLevel);
 		this.start();
 		
@@ -68,7 +70,7 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	public static void gameOver(){
-		
+//		isPlaying = false;
 	}
 	
 	public static void nextLevel(){
@@ -130,9 +132,11 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	private void tick(){
+//		if(isPlaying){
+//			GameObjectManager.tick();
+//		}
 		GameObjectManager.tick();
 		hud.tick();
-		
 	}
 	
 	private void render(){
@@ -148,6 +152,9 @@ public class Game extends Canvas implements Runnable{
 		g.setColor(BACKGROUND_COLOR);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
+//		if(isPlaying){
+//			GameObjectManager.render(g);
+//		}
 		GameObjectManager.render(g);
 		hud.render(g);
 		

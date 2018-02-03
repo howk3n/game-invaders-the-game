@@ -1,6 +1,7 @@
 package com.dusan.game.gameinvadersthgame.main;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 import com.dusan.game.gameinvadersthgame.gameobjects.Alien;
 import com.dusan.game.gameinvadersthgame.gameobjects.AlienBullet;
@@ -71,6 +72,29 @@ public class CollisionManager {
 					else if((currentObject instanceof PlayerBullet && otherObject instanceof AlienBullet) || (currentObject instanceof AlienBullet && otherObject instanceof PlayerBullet)){
 						GameObjectManager.removeObject(currentObject);
 						GameObjectManager.removeObject(otherObject);
+					}
+					else if(currentObject instanceof FlyingSaucer && otherObject instanceof FlyingSaucer){
+						
+						Random random = new Random();
+						int minX = Math.min(currentObject.getX(), otherObject.getX());
+						int maxX = Math.max(currentObject.getX(), otherObject.getX());
+						if(minX > 0 && maxX < Game.WIDTH){
+							for(int k = 0; k < 50; k++){
+								int val = random.nextInt(maxX - minX);
+								int velX = random.nextInt(11) - 5;
+								int velY = (int) Math.sqrt(Math.pow(5, 2) - Math.pow(velX, 2));
+								try {
+									GameObjectManager.makeAlienBulletWithVelocity((minX + val), currentObject.getY() + currentObject.getHeight(), velX, velY);
+//									GameObjectManager.makeObject((minX + val), currentObject.getY() + currentObject.getHeight(), GOID.AlienBullet);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						}
+						
+						GameObjectManager.removeObject(currentObject);
+						GameObjectManager.removeObject(otherObject);
+						
 					}
 				}
 			}

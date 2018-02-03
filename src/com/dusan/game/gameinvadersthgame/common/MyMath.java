@@ -1,6 +1,6 @@
 package com.dusan.game.gameinvadersthgame.common;
 
-public class Math {
+public class MyMath {
 
 	public final static int clamp(int var, int min, int max){
 		
