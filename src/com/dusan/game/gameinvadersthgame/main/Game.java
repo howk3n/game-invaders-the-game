@@ -8,11 +8,15 @@ import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
+import com.dusan.game.gameinvadersthegame.gfx.Assets;
 import com.dusan.game.gameinvadersthgame.common.Constants;
 
 public class Game extends Canvas implements Runnable{
 	
 	private static final long serialVersionUID = -4822824580043367729L;
+	
+	protected enum STATE{ MENU, GAME, ENDGAME_SCREEN };
+	protected static STATE state = STATE.MENU;
 	
 	private static Game instance;
 	private Thread thread;
@@ -26,7 +30,6 @@ public class Game extends Canvas implements Runnable{
 	public static int score;
 	public static int PLAYER_STARTING_X = Constants.DEFAULT_BASIC_BARRIER_WIDTH + (Constants.DEFAULT_BASIC_BARRIER_WIDTH - Constants.DEFAULT_PLAYER_WIDTH) / 2;
 	public static int PLAYER_STARTING_Y = HEIGHT - Constants.DEFAULT_PLAYER_HEIGHT;
-//	private static boolean isPlaying = false;
 	
 	private void initFrame(int width, int height, String title){
 		JFrame frame = new JFrame(title);
@@ -36,7 +39,8 @@ public class Game extends Canvas implements Runnable{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
-		
+		Assets.init();
+		Menu.init();
 		
 		frame.add(this);
 		frame.setVisible(true);
@@ -48,6 +52,7 @@ public class Game extends Canvas implements Runnable{
 		initFrame(WIDTH,HEIGHT, title);
 
 		hud = HUD.getInstance();
+		this.addMouseListener(MouseInput.getInstance());
 		this.addKeyListener(KeyInput.getInstance());
 		GameObjectManager.init();
 		currentLevel = 0;
@@ -63,6 +68,10 @@ public class Game extends Canvas implements Runnable{
 		}
 		return instance;
 		
+	}
+	
+	public static void startGame(){
+		state = STATE.GAME;
 	}
 	
 	public static void incrementScore(int points){
@@ -132,15 +141,16 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	private void tick(){
-//		if(isPlaying){
-//			GameObjectManager.tick();
-//		}
-		GameObjectManager.tick();
-		hud.tick();
+		if(state == STATE.GAME){
+			GameObjectManager.tick();
+			hud.tick();
+		}
+		else if(state == STATE.MENU){
+			
+		}
 	}
 	
 	private void render(){
-		
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null){
 			this.createBufferStrategy(3);
@@ -152,11 +162,14 @@ public class Game extends Canvas implements Runnable{
 		g.setColor(BACKGROUND_COLOR);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
-//		if(isPlaying){
-//			GameObjectManager.render(g);
-//		}
-		GameObjectManager.render(g);
-		hud.render(g);
+		if(state == STATE.GAME){
+			GameObjectManager.render(g);
+			hud.render(g);
+		}
+		else if(state == STATE.MENU){
+			Menu.render(g);
+		}
+		
 		
 		g.dispose();
 		bs.show();

@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 import com.dusan.game.gameinvadersthgame.gameobjects.Player;
+import com.dusan.game.gameinvadersthgame.main.Game.STATE;
 
 public class KeyInput extends KeyAdapter{	
 	
@@ -24,25 +25,31 @@ public class KeyInput extends KeyAdapter{
 	private Player player;
 	
 	public void keyPressed(KeyEvent e){
-		if(!(GameObjectManager.getPlayer()==null || GameObjectManager.getPlayer().isDying)){
-			player = GameObjectManager.getPlayer();
-			int keyCode = e.getKeyCode();
-			keysPressed.put(keyCode, true);
-			if(keyCode == KeyEvent.VK_LEFT){
-				player.move(Player.PlayerMove.LEFT);
-			}
-			if(keyCode == KeyEvent.VK_RIGHT){
-				player.move(Player.PlayerMove.RIGHT);
-			}
-			
-			if(keyCode == KeyEvent.VK_SPACE){
-				player.shoot();
-			}
+		if(Game.state == STATE.GAME){
+			if(!(GameObjectManager.getPlayer()==null || GameObjectManager.getPlayer().isDying)){
+				player = GameObjectManager.getPlayer();
+				int keyCode = e.getKeyCode();
+				keysPressed.put(keyCode, true);
+				if(keyCode == KeyEvent.VK_LEFT){
+					player.move(Player.PlayerMove.LEFT);
+				}
+				if(keyCode == KeyEvent.VK_RIGHT){
+					player.move(Player.PlayerMove.RIGHT);
+				}
+				
+				if(keyCode == KeyEvent.VK_SPACE){
+					player.shoot();
+				}
 
-			if(keyCode == KeyEvent.VK_ESCAPE){
-				System.exit(1);
+				if(keyCode == KeyEvent.VK_ESCAPE){
+					System.exit(1);
+				}
 			}
 		}
+		else{
+			
+		}
+		
 		
 		
 		

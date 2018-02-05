@@ -54,4 +54,8 @@ public class Constants {
 		return ALIENS_PER_LEVEL[level][JUNIOR] + ALIENS_PER_LEVEL[level][MEDIOR] + ALIENS_PER_LEVEL[level][SENIOR];
 	}
 	
+	public static int DEFAULT_MENU_BUTTON_WIDTH = DEFAULT_SCREEN_WIDTH / 2;
+	public static int DEFAULT_MENU_BUTTON_HEIGHT = DEFAULT_SCREEN_HEIGHT / 10;
+	public static String[] MENU_BUTTONS = {"ARCADE", "STORY", "QUIT"};
+	
 }
