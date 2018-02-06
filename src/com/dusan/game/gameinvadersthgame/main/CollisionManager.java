@@ -81,10 +81,11 @@ public class CollisionManager {
 						if(minX > 0 && maxX < Game.WIDTH){
 							for(int k = 0; k < 50; k++){
 								int val = random.nextInt(maxX - minX);
-								int velX = random.nextInt(11) - 5;
+								int velX = 0;
 								int velY = 0;
 //								Makes sure the velY isn't 0
 								while(velY == 0){
+									velX = random.nextInt(11) - 5;
 									velY = (int) Math.sqrt(Math.pow(5, 2) - Math.pow(velX, 2));
 								}
 								try {
