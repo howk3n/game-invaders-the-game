@@ -11,6 +11,7 @@ public abstract class Alien extends GameObject {
 	public int points;
 	public boolean shouldShoot;
 	public AlienMove shouldMoveInDirection;
+	private int columnIndex;
 	
 	public Alien(int x, int y, GOID id) {
 		super(x, y, id);
@@ -19,7 +20,7 @@ public abstract class Alien extends GameObject {
 		this.shouldShoot = false;
 		this.shouldMoveInDirection = AlienMove.NONE;
 	}
-	
+
 	@Override
 	public void tick(){
 
@@ -59,6 +60,14 @@ public abstract class Alien extends GameObject {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public int getColumnIndex() {
+		return columnIndex;
+	}
+
+	public void setColumnIndex(int columnIndex) {
+		this.columnIndex = columnIndex;
 	}
 
 }

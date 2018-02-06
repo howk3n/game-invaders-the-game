@@ -13,10 +13,12 @@ import com.dusan.game.gameinvadersthgame.common.Constants;
 
 public class Game extends Canvas implements Runnable{
 	
+//	TODO: Either make it Singleton with no static fields, or make it not singleton with static fields
+	
 	private static final long serialVersionUID = -4822824580043367729L;
 	
 	protected enum STATE{ MENU, GAME, ENDGAME_SCREEN };
-	protected static STATE state = STATE.MENU;
+	protected STATE state = STATE.MENU;
 	
 	private static Game instance;
 	private Thread thread;
@@ -70,7 +72,7 @@ public class Game extends Canvas implements Runnable{
 		
 	}
 	
-	public static void startGame(){
+	public void startGame(){
 		state = STATE.GAME;
 	}
 	

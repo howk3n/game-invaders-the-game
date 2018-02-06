@@ -16,7 +16,7 @@ public class Menu {
 	public static void init(){
 		buttons = new Rectangle[Constants.MENU_BUTTONS.length];
 		for(int i = 0; i < Constants.MENU_BUTTONS.length; i++){
-			buttons[i] = new Rectangle(Assets.buttonWidth / 2, 100 + (Assets.buttonHeight + 20) * i, Assets.buttonWidth, Assets.buttonHeight);
+			buttons[i] = new Rectangle((Game.WIDTH - Assets.buttonWidth) / 2, 100 + (Assets.buttonHeight + 10) * i, Assets.buttonWidth, Assets.buttonHeight);
 		}
 	}
 	
@@ -26,13 +26,10 @@ public class Menu {
 		g.setColor(Color.RED);
 		g.setFont(new Font("arial", Font.BOLD, 28));
 		g.drawString("Game Invaders - The Game", Game.WIDTH / 5, Constants.HUD_HEIGHT);
+		Rectangle button;
 		for(int i = 0; i < Constants.MENU_BUTTONS.length; i++){
-			
-			g2d.drawImage(Assets.menuButtons.get(Constants.MENU_BUTTONS[i]), Assets.buttonWidth / 2, 100 + (Assets.buttonHeight + 20) * i, Assets.buttonWidth, Assets.buttonHeight, null);
-//			button.setBounds(Game.WIDTH / 4, Constants.HUD_HEIGHT * 2 + Constants.HUD_HEIGHT * i, Constants.DEFAULT_MENU_BUTTON_WIDTH, Constants.DEFAULT_MENU_BUTTON_HEIGHT);
-//			g.setFont(new Font("arial", Font.BOLD, 30));
-//			g.drawString(Constants.MENU_BUTTONS[i], button.x + 100, button.y + 40);
-//			g2d.draw(button);
+			button = buttons[i];
+			g2d.drawImage(Assets.menuButtons.get(Constants.MENU_BUTTONS[i]), button.x, button.y, button.width, button.height, Game.getInstance());
 		}
 	}
 	

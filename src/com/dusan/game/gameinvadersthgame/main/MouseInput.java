@@ -3,6 +3,8 @@ package com.dusan.game.gameinvadersthgame.main;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import com.dusan.game.gameinvadersthgame.main.Game.STATE;
+
 public class MouseInput implements MouseListener{
 	
 	private static MouseInput instance;
@@ -16,51 +18,40 @@ public class MouseInput implements MouseListener{
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void mousePressed(MouseEvent e) {
-		int mx = e.getX();
-		int my = e.getY();
-		
-		for(int i = 0; i < Menu.buttons.length; i++){
-			if(mx >= Menu.buttons[i].x && mx <= Menu.buttons[i].x + Menu.buttons[i].width && my >= Menu.buttons[i].y && my <= Menu.buttons[i].y + Menu.buttons[i].height){
-				switch(i){
-				case 0:
-					Game.startGame();
-					break;
-				case 2:
-					System.exit(1);
-				case 1:
-				default:
-					break;
+		if(Game.getInstance().state == STATE.MENU){
+			int mx = e.getX();
+			int my = e.getY();
+			
+			for(int i = 0; i < Menu.buttons.length; i++){
+				if(mx >= Menu.buttons[i].x && mx <= Menu.buttons[i].x + Menu.buttons[i].width && my >= Menu.buttons[i].y && my <= Menu.buttons[i].y + Menu.buttons[i].height){
+					switch(i){
+					case 0:
+						Game.getInstance().startGame();
+						break;
+					case 2:
+						System.exit(1);
+					case 1:
+					default:
+						break;
+					}
+					
 				}
-				
 			}
 		}
 		
-		
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseClicked(MouseEvent e) {}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {}
 
 }

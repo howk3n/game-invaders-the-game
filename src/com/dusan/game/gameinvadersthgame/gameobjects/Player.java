@@ -11,7 +11,6 @@ public class Player extends GameObject {
 	public static int lives;
 	public boolean isDying;
 	private int speed;
-
 	
 	protected Player(int x, int y, GOID id) {
 		super(x, y, id);

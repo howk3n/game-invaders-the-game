@@ -25,9 +25,13 @@ public class KeyInput extends KeyAdapter{
 	private Player player;
 	
 	public void keyPressed(KeyEvent e){
-		if(Game.state == STATE.GAME){
-			if(!(GameObjectManager.getPlayer()==null || GameObjectManager.getPlayer().isDying)){
-				player = GameObjectManager.getPlayer();
+		if(Game.getInstance().state == STATE.GAME){
+//			Dunno man, it was nice and clean using the state only in Game if possible. Another reason to ONLY set shouldShoot and shouldMoveInDirection from KeyInput class,
+//			and then Player::tick() should be the only one calling shoot() / move() / stop(), which could then be Player private methods.
+			player = GameObjectManager.getPlayer();
+			if(!(player == null || player.isDying)){
+//			if((player != null) && !player.isDying){
+				
 				int keyCode = e.getKeyCode();
 				keysPressed.put(keyCode, true);
 				if(keyCode == KeyEvent.VK_LEFT){
@@ -50,14 +54,12 @@ public class KeyInput extends KeyAdapter{
 			
 		}
 		
-		
-		
-		
 	}
 	
 	public void keyReleased(KeyEvent e){
-		if(GameObjectManager.getPlayer()!=null || !GameObjectManager.getPlayer().isDying){
-			player = GameObjectManager.getPlayer();
+		player = GameObjectManager.getPlayer();
+		if(player != null || !player.isDying){
+			
 			int keyCode = e.getKeyCode();
 			if(keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT){
 				

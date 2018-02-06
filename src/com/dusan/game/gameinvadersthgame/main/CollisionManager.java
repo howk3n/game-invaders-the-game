@@ -82,10 +82,13 @@ public class CollisionManager {
 							for(int k = 0; k < 50; k++){
 								int val = random.nextInt(maxX - minX);
 								int velX = random.nextInt(11) - 5;
-								int velY = (int) Math.sqrt(Math.pow(5, 2) - Math.pow(velX, 2));
+								int velY = 0;
+//								Makes sure the velY isn't 0
+								while(velY == 0){
+									velY = (int) Math.sqrt(Math.pow(5, 2) - Math.pow(velX, 2));
+								}
 								try {
 									GameObjectManager.makeAlienBulletWithVelocity((minX + val), currentObject.getY() + currentObject.getHeight(), velX, velY);
-//									GameObjectManager.makeObject((minX + val), currentObject.getY() + currentObject.getHeight(), GOID.AlienBullet);
 								} catch (Exception e) {
 									e.printStackTrace();
 								}

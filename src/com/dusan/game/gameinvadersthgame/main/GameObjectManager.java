@@ -7,6 +7,7 @@ import java.util.Random;
 
 import com.dusan.game.gameinvadersthgame.common.Constants;
 import com.dusan.game.gameinvadersthgame.common.GOID;
+import com.dusan.game.gameinvadersthgame.common.MyMath;
 import com.dusan.game.gameinvadersthgame.gameobjects.Alien;
 import com.dusan.game.gameinvadersthgame.gameobjects.Alien.AlienMove;
 import com.dusan.game.gameinvadersthgame.gameobjects.AlienBullet;
@@ -16,11 +17,14 @@ import com.dusan.game.gameinvadersthgame.gameobjects.FlyingSaucer;
 import com.dusan.game.gameinvadersthgame.gameobjects.FlyingSaucerFactory;
 import com.dusan.game.gameinvadersthgame.gameobjects.GameObject;
 import com.dusan.game.gameinvadersthgame.gameobjects.GameObjectFactory;
+import com.dusan.game.gameinvadersthgame.gameobjects.JuniorAlien;
 import com.dusan.game.gameinvadersthgame.gameobjects.JuniorAlienFactory;
+import com.dusan.game.gameinvadersthgame.gameobjects.MediorAlien;
 import com.dusan.game.gameinvadersthgame.gameobjects.MediorAlienFactory;
 import com.dusan.game.gameinvadersthgame.gameobjects.Player;
 import com.dusan.game.gameinvadersthgame.gameobjects.PlayerBulletFactory;
 import com.dusan.game.gameinvadersthgame.gameobjects.PlayerFactory;
+import com.dusan.game.gameinvadersthgame.gameobjects.SeniorAlien;
 import com.dusan.game.gameinvadersthgame.gameobjects.SeniorAlienFactory;
 
 class AlienPositionValues{
@@ -124,16 +128,16 @@ public class GameObjectManager {
 	
 	private static HashMap<Integer, Alien> getLowestAliens(){
 		HashMap<Integer, Alien> lowestAliens = new HashMap<Integer, Alien>();
-		int columnIndex;
 		for(int i = 0; i < allObjectsSize(); i++){
 			if(allObjects.get(i) instanceof Alien){
-				Alien alien = (Alien)allObjects.get(i);
-				columnIndex = (alien.getX() - alienPositions.minX) / (Constants.ALIEN_WIDTH[Constants.JUNIOR] - Constants.ALIEN_WIDTH[Constants.JUNIOR] / 3);
-				if(lowestAliens.get(columnIndex) == null || lowestAliens.get(columnIndex).getY()<alien.getY()){
+				Alien alien = (Alien) allObjects.get(i);
+				int columnIndex = alien.getColumnIndex();
+				if(lowestAliens.get(columnIndex) == null || lowestAliens.get(columnIndex).getY() < alien.getY()){
 					lowestAliens.put(columnIndex, alien);
 				}
 			}
 		}
+		
 		return lowestAliens;
 	}
 	
@@ -169,31 +173,37 @@ public class GameObjectManager {
 		int x = 0;
 		int y = 0;
 		int alienRows = Constants.getTotalAliensPerLevel(level)/Constants.ALIEN_COLUMN_COUNT;
-		for(int i = 0; i < Constants.ALIEN_COLUMN_COUNT; i++){
-			for(int j = 0; j<alienRows; j++){
-				x = Constants.ALIEN_HORIZONTAL_SPEED * 20 + ((Constants.ALIEN_WIDTH[Constants.JUNIOR] + Constants.ALIEN_HORIZONTAL_SPEED * 2) * i);
-				y = Constants.HUD_HEIGHT + Constants.FLYING_SAUCER_HEIGHT + Constants.ALIEN_HORIZONTAL_SPEED * 2  + j * (Constants.ALIEN_HEIGHT + Constants.ALIEN_VERTICAL_SPEED);
-				if(Constants.ALIENS_PER_LEVEL[level][Constants.SENIOR] / Constants.ALIEN_COLUMN_COUNT >= j + 1){
+		
+		for(int i = 0; i < alienRows; i++){
+			for(int j = 0; j < Constants.ALIEN_COLUMN_COUNT; j++){
+				
+				x = Constants.ALIEN_COLUMN_WIDTH * 5 / 2 + (Constants.ALIEN_COLUMN_WIDTH * j);
+				y = Constants.HUD_HEIGHT + Constants.FLYING_SAUCER_HEIGHT + Constants.ALIEN_VERTICAL_SPEED / 2  + i * (Constants.ALIEN_HEIGHT + Constants.ALIEN_VERTICAL_SPEED) + (Constants.ALIEN_VERTICAL_SPEED / 2) * MyMath.clamp(level - 1, 0, 10);
+				
+				if(Constants.ALIENS_PER_LEVEL[level][Constants.SENIOR] / Constants.ALIEN_COLUMN_COUNT > i){
 					try {
-						makeObject(x+(Constants.ALIEN_WIDTH[Constants.JUNIOR] - Constants.ALIEN_WIDTH[Constants.SENIOR]) / 2, y, GOID.SeniorAlien);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else if(Constants.ALIENS_PER_LEVEL[level][Constants.MEDIOR] / Constants.ALIEN_COLUMN_COUNT > j - Constants.ALIENS_PER_LEVEL[level][Constants.SENIOR] / Constants.ALIEN_COLUMN_COUNT){
-					try {
-						makeObject(x+(Constants.ALIEN_WIDTH[Constants.JUNIOR] - Constants.ALIEN_WIDTH[Constants.MEDIOR]) / 2, y, GOID.MediorAlien);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else{
-					try {
-						makeObject(x,y,GOID.JuniorAlien);
+						makeAlienWithColumnIndex(x + (Constants.ALIEN_WIDTH[Constants.JUNIOR] - Constants.ALIEN_WIDTH[Constants.SENIOR]) / 2, y, j, GOID.SeniorAlien);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
-				numberOfAliens++;
+				else if((Constants.ALIENS_PER_LEVEL[level][Constants.MEDIOR] + Constants.ALIENS_PER_LEVEL[level][Constants.SENIOR]) / Constants.ALIEN_COLUMN_COUNT > i){
+					try {
+						makeAlienWithColumnIndex(x + (Constants.ALIEN_WIDTH[Constants.JUNIOR] - Constants.ALIEN_WIDTH[Constants.MEDIOR]) / 2, y, j, GOID.MediorAlien);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				else {
+					try {
+						makeAlienWithColumnIndex(x, y, j, GOID.JuniorAlien);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
 			}
+			numberOfAliens++;
 		}
 		
 	}
@@ -219,8 +229,17 @@ public class GameObjectManager {
 		
 		if(gameTimer >= 1 / gameSpeed){
 			gameTimer = 0;
+			
+			for(int i = 0; i < allObjectsSize(); i++){
+				GameObject currentObject = allObjects.get(i);
+				if(currentObject instanceof Alien){
+					alienPositions.expandValueRanges(currentObject.getX(), currentObject.getY());
+				}
+			}
+			
 //			Alien Movement
 			alienMove = true;
+			System.out.println(alienPositions.maxX);
 			if((alienDirection == AlienMove.RIGHT && alienPositions.maxX >= Game.WIDTH - Constants.ALIEN_WIDTH[Constants.JUNIOR] - Constants.ALIEN_HORIZONTAL_SPEED) || (alienDirection == AlienMove.LEFT && alienPositions.minX <= 0)){
 				alienDirection = AlienMove.DOWN;
 			} else if(alienDirection == AlienMove.DOWN){
@@ -230,6 +249,8 @@ public class GameObjectManager {
 					alienDirection = AlienMove.RIGHT;
 				}
 			}
+			
+			
 			
 //			Alien Shootment
 			alienShoot = true;
@@ -242,11 +263,10 @@ public class GameObjectManager {
 			
 		}
 		
-		alienPositions.setBaseline();
 		playerHasBullet = false;
 		
 		CollisionManager.getInstance().tick();
-		
+		alienPositions.setBaseline();
 		int newNumberOfAliens = 0;
 		for(int i = 0; i < allObjects.size(); i++){
 			
@@ -254,8 +274,6 @@ public class GameObjectManager {
 			
 			if(currentObject instanceof Alien){
 				newNumberOfAliens++;
-				
-				alienPositions.expandValueRanges(currentObject.getX(), currentObject.getY());
 				
 				if(alienMove){
 					try {
@@ -266,9 +284,11 @@ public class GameObjectManager {
 					}
 				}
 				if(alienShoot){
-					
 					if(lowestAliens.containsValue(currentObject) && (randomGenerator.nextInt(25)) >= 23){
 						((Alien) currentObject).shouldShoot = true;
+					}
+					else{
+						((Alien) currentObject).shouldShoot = false;
 					}
 				}
 			}
@@ -291,6 +311,7 @@ public class GameObjectManager {
 			}
 			
 		}
+		
 		gameTimer += GameTime.delta;
 		alienShoot = false;
 		alienMove = false;
@@ -349,6 +370,25 @@ public class GameObjectManager {
 		tempBullet.setVelX(velX);
 		tempBullet.setVelY(velY);
 		addObject(tempBullet);
+	}
+	
+	public static void makeAlienWithColumnIndex(int x, int y, int columnIndex, GOID id) throws Exception{
+		Alien alien;
+		switch(id){
+		case JuniorAlien:
+			alien = (JuniorAlien) jaf.getObject(x, y, id);
+			break;
+		case MediorAlien:
+			alien = (MediorAlien) maf.getObject(x, y, id);
+			break;
+		case SeniorAlien:
+			alien = (SeniorAlien) saf.getObject(x, y, id);
+			break;
+		default:
+			throw new Exception("Invalid alien ID");
+		}
+		alien.setColumnIndex(columnIndex);
+		addObject(alien);
 	}
 	
 	public static void addObject(GameObject o){

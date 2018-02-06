@@ -1,5 +1,7 @@
 package com.dusan.game.gameinvadersthegame.gfx;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,12 +18,12 @@ public class Assets {
 	public static int buttonWidth;
 	public static int buttonHeight;
 	public static void init(){
-		buttonWidth = Game.WIDTH / 2;
-		buttonHeight = Game.HEIGHT / 6;
+		buttonHeight = Game.HEIGHT / 4;
+		buttonWidth = buttonHeight * Constants.ORIGINAL_MENU_BUTTON_WIDTH / Constants.ORIGINAL_MENU_BUTTON_HEIGHT;
 		for(int i = 0; i < Constants.MENU_BUTTONS.length; i++){
 			System.out.println("/textures/"+ Constants.MENU_BUTTONS[i].toLowerCase() +"button.png");
-			menuButtons.put(Constants.MENU_BUTTONS[i], loadImage("/textures/"+ Constants.MENU_BUTTONS[i].toLowerCase() +"button.png"));
-			
+			BufferedImage resizedButton = resize(loadImage("/textures/"+ Constants.MENU_BUTTONS[i].toLowerCase() +"button.png"), buttonWidth, buttonHeight);
+			menuButtons.put(Constants.MENU_BUTTONS[i], resizedButton);
 		}
 	}
 	
@@ -36,5 +38,16 @@ public class Assets {
 		return null;
 	
 	}
+	
+	public static BufferedImage resize(BufferedImage img, int newW, int newH) { 
+	    Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+	    BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+
+	    Graphics2D g2d = dimg.createGraphics();
+	    g2d.drawImage(tmp, 0, 0, null);
+	    g2d.dispose();
+
+	    return dimg;
+	}  
 	
 }

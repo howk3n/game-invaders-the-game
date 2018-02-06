@@ -34,6 +34,7 @@ public class Constants {
 	public static final Color PLAYER_BULLET_COLOR = Color.WHITE;
 	
 	public static final int ALIEN_COLUMN_COUNT = 11;
+	public static final int ALIEN_COLUMN_WIDTH = 40;
 	
 	public static final Color ALIEN_COLOR = Color.GREEN;
 	public static final int ALIEN_HEIGHT = 30;
@@ -53,6 +54,9 @@ public class Constants {
 	public static int getTotalAliensPerLevel(int level){
 		return ALIENS_PER_LEVEL[level][JUNIOR] + ALIENS_PER_LEVEL[level][MEDIOR] + ALIENS_PER_LEVEL[level][SENIOR];
 	}
+	
+	public static int ORIGINAL_MENU_BUTTON_WIDTH = 1920;
+	public static int ORIGINAL_MENU_BUTTON_HEIGHT = 1080;
 	
 	public static int DEFAULT_MENU_BUTTON_WIDTH = DEFAULT_SCREEN_WIDTH / 2;
 	public static int DEFAULT_MENU_BUTTON_HEIGHT = DEFAULT_SCREEN_HEIGHT / 10;
