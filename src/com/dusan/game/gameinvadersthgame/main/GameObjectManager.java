@@ -109,7 +109,6 @@ public class GameObjectManager {
 		alienShoot = false;
 		playerHasBullet = false;
 
-		
 		Player.lives = Constants.PLAYER_STARTING_LIVES;
 		
 	}
@@ -118,7 +117,7 @@ public class GameObjectManager {
 		Player player = getPlayer();
 		if(Player.lives <= 1){
 //			allObjects.clear();
-			Game.gameOver();
+			Game.getInstance().gameOver();
 		}
 		else{
 			player.die();
@@ -154,13 +153,13 @@ public class GameObjectManager {
 	public static void initLevel(int level){
 		if(level == 0){
 			try {
-				makeObject(Game.PLAYER_STARTING_X, Game.PLAYER_STARTING_Y, GOID.Player);
+				makeObject(Game.getInstance().playerStartingX, Game.getInstance().playerStartingY, GOID.Player);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
 			for(int i = 0; i < Constants.NUMBER_OF_BARRIERS; i++){
 				try {
-					makeObject(Constants.DEFAULT_BASIC_BARRIER_WIDTH + (2*i*Constants.DEFAULT_BASIC_BARRIER_WIDTH), Game.HEIGHT - Constants.HUD_HEIGHT * 2, GOID.Barrier);
+					makeObject(Constants.DEFAULT_BASIC_BARRIER_WIDTH + (2*i*Constants.DEFAULT_BASIC_BARRIER_WIDTH), Game.getInstance().height - Constants.HUD_HEIGHT * 2, GOID.Barrier);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -222,9 +221,9 @@ public class GameObjectManager {
 	public static void tick(){
 		
 		if(numberOfAliens == 0){
-			Game.nextLevel();
+			Game.getInstance().nextLevel();
 		}else{
-			gameSpeed = 1 + (1 + Game.currentLevel) * 0.015 * (Constants.getTotalAliensPerLevel(Game.currentLevel) - numberOfAliens);
+			gameSpeed = 1 + (1 + Game.getInstance().currentLevel) * 0.015 * (Constants.getTotalAliensPerLevel(Game.getInstance().currentLevel) - numberOfAliens);
 		}
 		
 		if(gameTimer >= 1 / gameSpeed){
@@ -240,10 +239,10 @@ public class GameObjectManager {
 //			Alien Movement
 			alienMove = true;
 			System.out.println(alienPositions.maxX);
-			if((alienDirection == AlienMove.RIGHT && alienPositions.maxX >= Game.WIDTH - Constants.ALIEN_WIDTH[Constants.JUNIOR] - Constants.ALIEN_HORIZONTAL_SPEED) || (alienDirection == AlienMove.LEFT && alienPositions.minX <= 0)){
+			if((alienDirection == AlienMove.RIGHT && alienPositions.maxX >= Game.getInstance().width - Constants.ALIEN_WIDTH[Constants.JUNIOR] - Constants.ALIEN_HORIZONTAL_SPEED) || (alienDirection == AlienMove.LEFT && alienPositions.minX <= 0)){
 				alienDirection = AlienMove.DOWN;
 			} else if(alienDirection == AlienMove.DOWN){
-				if(alienPositions.maxX >= Game.WIDTH - Constants.ALIEN_WIDTH[Constants.JUNIOR] - Constants.ALIEN_HORIZONTAL_SPEED){
+				if(alienPositions.maxX >= Game.getInstance().width - Constants.ALIEN_WIDTH[Constants.JUNIOR] - Constants.ALIEN_HORIZONTAL_SPEED){
 					alienDirection = AlienMove.LEFT;
 				} else if(alienPositions.minX <= 0){
 					alienDirection = AlienMove.RIGHT;
@@ -296,10 +295,10 @@ public class GameObjectManager {
 			if(currentObject instanceof FlyingSaucer){
 				int newVelX;
 				if(currentObject.getVelX() > 0){
-					newVelX = (int)Math.floor((Constants.FLYING_SAUCER_BASE_VELOCITY + (Game.currentLevel + 1) / 3) + (0.04 * (Constants.getTotalAliensPerLevel(Game.currentLevel) - numberOfAliens)));
+					newVelX = (int)Math.floor((Constants.FLYING_SAUCER_BASE_VELOCITY + (Game.getInstance().currentLevel + 1) / 3) + (0.04 * (Constants.getTotalAliensPerLevel(Game.getInstance().currentLevel) - numberOfAliens)));
 				}
 				else{
-					newVelX = (int)Math.floor((int)(-1 * Constants.FLYING_SAUCER_BASE_VELOCITY - (Game.currentLevel + 1) / 3) - (0.04 * (Constants.getTotalAliensPerLevel(Game.currentLevel) - numberOfAliens)));
+					newVelX = (int)Math.floor((int)(-1 * Constants.FLYING_SAUCER_BASE_VELOCITY - (Game.getInstance().currentLevel + 1) / 3) - (0.04 * (Constants.getTotalAliensPerLevel(Game.getInstance().currentLevel) - numberOfAliens)));
 				}
 				currentObject.setVelX(newVelX);
 			}
@@ -325,10 +324,10 @@ public class GameObjectManager {
 	}
 	
 	public static void getPoints(Alien a){
-		Game.incrementScore(a.points);
+		Game.getInstance().incrementScore(a.points);
 	}
 	public static void getPoints(FlyingSaucer fs){
-		Game.incrementScore(fs.points);
+		Game.getInstance().incrementScore(fs.points);
 	}
 	
 	public static void makeObject(int x, int y, GOID id) throws Exception{

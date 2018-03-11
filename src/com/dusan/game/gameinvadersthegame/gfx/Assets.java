@@ -18,7 +18,7 @@ public class Assets {
 	public static int buttonWidth;
 	public static int buttonHeight;
 	public static void init(){
-		buttonHeight = Game.HEIGHT / 4;
+		buttonHeight = Game.getInstance().height / 4;
 		buttonWidth = buttonHeight * Constants.ORIGINAL_MENU_BUTTON_WIDTH / Constants.ORIGINAL_MENU_BUTTON_HEIGHT;
 		for(int i = 0; i < Constants.MENU_BUTTONS.length; i++){
 			System.out.println("/textures/"+ Constants.MENU_BUTTONS[i].toLowerCase() +"button.png");

@@ -23,8 +23,8 @@ public abstract class GameObject{
 		x+=velX;
 		y+=velY;
 		
-		x = MyMath.clamp(x, 0, Game.WIDTH - 72);
-		y = MyMath.clamp(y, 0, Game.HEIGHT - 64);
+		x = MyMath.clamp(x, 0, Game.getInstance().width - 72);
+		y = MyMath.clamp(y, 0, Game.getInstance().height - 64);
 	}
 	
 	public void render(Graphics g){

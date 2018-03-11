@@ -19,7 +19,7 @@ public class FlyingSaucer extends GameObject{
 		super(x, y, id);
 		this.direction = randomizeDirection();
 		if(this.getDirection() == Direction.LEFT){
-			this.x = Game.WIDTH + Constants.FLYING_SAUCER_WIDTH;
+			this.x = Game.getInstance().width + Constants.FLYING_SAUCER_WIDTH;
 			this.velX = -1 * Constants.FLYING_SAUCER_BASE_VELOCITY;
 		}
 		else{
@@ -42,10 +42,10 @@ public class FlyingSaucer extends GameObject{
 		x+=velX;
 		y+=velY;
 		
-		if((velX >= 0 && x >= Game.WIDTH) || (velX <=0 && x <= 0 - this.width)){
+		if((velX >= 0 && x >= Game.getInstance().width) || (velX <=0 && x <= 0 - this.width)){
 			GameObjectManager.removeObject(this);
 		}
-		y = MyMath.clamp(y, 0, Game.HEIGHT - 64);
+		y = MyMath.clamp(y, 0, Game.getInstance().height - 64);
 	}
 	
 	private Direction randomizeDirection(){

@@ -19,10 +19,10 @@ public class AlienBullet extends Bullet{
 	public void tick(){
 		x+=velX;
 		y+=velY;
-		if(y >= Game.HEIGHT){
+		if(y >= Game.getInstance().height){
 			GameObjectManager.removeObject(this);
 		}
-		if(x >= Game.WIDTH || x <= 0){
+		if(x >= Game.getInstance().width || x <= 0){
 			velX *= -1;
 		}
 	}

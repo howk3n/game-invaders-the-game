@@ -13,25 +13,42 @@ import com.dusan.game.gameinvadersthgame.common.Constants;
 
 public class Game extends Canvas implements Runnable{
 	
-//	TODO: Either make it Singleton with no static fields, or make it not singleton with static fields
-	
 	private static final long serialVersionUID = -4822824580043367729L;
 	
 	protected enum STATE{ MENU, GAME, ENDGAME_SCREEN };
-	protected STATE state = STATE.MENU;
+	protected STATE state;
 	
 	private static Game instance;
 	private Thread thread;
-	private boolean running = false;
-	
-	public static int WIDTH = Constants.DEFAULT_SCREEN_WIDTH;
-	public static int HEIGHT = Constants.DEFAULT_SCREEN_HEIGHT;
-	private static Color BACKGROUND_COLOR = Constants.DEFAULT_BACKGROUND_COLOR;
+	private boolean running;
+	private Color backgroundColor;
 	private HUD hud;
-	public static int currentLevel;	
-	public static int score;
-	public static int PLAYER_STARTING_X = Constants.DEFAULT_BASIC_BARRIER_WIDTH + (Constants.DEFAULT_BASIC_BARRIER_WIDTH - Constants.DEFAULT_PLAYER_WIDTH) / 2;
-	public static int PLAYER_STARTING_Y = HEIGHT - Constants.DEFAULT_PLAYER_HEIGHT;
+	
+	public int width;
+	public int height;
+	public int currentLevel;	
+	public int score;
+	public int playerStartingY;
+	public int playerStartingX;
+	
+	private void initGame(){
+		
+		state = STATE.MENU;
+		running = false;
+		width = Constants.DEFAULT_SCREEN_WIDTH;
+		height = Constants.DEFAULT_SCREEN_HEIGHT;
+		backgroundColor = Constants.DEFAULT_BACKGROUND_COLOR;
+		playerStartingY = height - Constants.DEFAULT_PLAYER_HEIGHT;
+		playerStartingX = Constants.DEFAULT_BASIC_BARRIER_WIDTH + (Constants.DEFAULT_BASIC_BARRIER_WIDTH - Constants.DEFAULT_PLAYER_WIDTH) / 2;
+		
+		initFrame(Constants.DEFAULT_SCREEN_WIDTH, Constants.DEFAULT_SCREEN_HEIGHT, "Game Invaders The Game");
+		hud = HUD.getInstance();
+		this.addMouseListener(MouseInput.getInstance());
+		this.addKeyListener(KeyInput.getInstance());
+		score = 0;
+		currentLevel = 0;
+		this.start();
+	}
 	
 	private void initFrame(int width, int height, String title){
 		JFrame frame = new JFrame(title);
@@ -49,46 +66,49 @@ public class Game extends Canvas implements Runnable{
 		this.requestFocusInWindow();
 	}
 	
-	private Game(int width, int height, String title){	
-		
-		initFrame(WIDTH,HEIGHT, title);
-
-		hud = HUD.getInstance();
-		this.addMouseListener(MouseInput.getInstance());
-		this.addKeyListener(KeyInput.getInstance());
-		GameObjectManager.init();
-		currentLevel = 0;
-		GameObjectManager.initLevel(currentLevel);
-		this.start();
-		
-	}
+	private Game(){}
 	
 	public static Game getInstance(){
 		
 		if(instance == null){
-			instance = new Game(WIDTH, HEIGHT, "Game Invaders The Game");
+			instance = new Game();
+			instance.initGame();
 		}
 		return instance;
 		
 	}
 	
 	public void startGame(){
+		GameObjectManager.init();
+		GameObjectManager.initLevel(currentLevel);
 		state = STATE.GAME;
 	}
 	
-	public static void incrementScore(int points){
+	public void incrementScore(int points){
 		score += points;
 	}
 	
-	public static void gameOver(){
-//		isPlaying = false;
+	public void gameOver(){
+		state = STATE.ENDGAME_SCREEN;
+		EndGameScreen.init();
+		GameObjectManager.getAllObjects().clear();
 	}
 	
-	public static void nextLevel(){
+	public void nextLevel(){
 		currentLevel++;
 		GameObjectManager.initLevel(currentLevel);
 	}
 	
+	public void saveScore(){
+//		persist score and then...
+		state = STATE.MENU;
+		reset();
+	}
+	
+	private void reset(){
+		score = 0;
+		currentLevel = 0;
+	}
 
 	public synchronized void start(){
 		
@@ -150,6 +170,9 @@ public class Game extends Canvas implements Runnable{
 		else if(state == STATE.MENU){
 			
 		}
+		else if(state == STATE.ENDGAME_SCREEN){
+			
+		}
 	}
 	
 	private void render(){
@@ -161,8 +184,8 @@ public class Game extends Canvas implements Runnable{
 		
 		Graphics g = bs.getDrawGraphics();
 		
-		g.setColor(BACKGROUND_COLOR);
-		g.fillRect(0, 0, WIDTH, HEIGHT);
+		g.setColor(backgroundColor);
+		g.fillRect(0, 0, width, height);
 		
 		if(state == STATE.GAME){
 			GameObjectManager.render(g);
@@ -170,6 +193,9 @@ public class Game extends Canvas implements Runnable{
 		}
 		else if(state == STATE.MENU){
 			Menu.render(g);
+		}
+		else if(state == STATE.ENDGAME_SCREEN){
+			EndGameScreen.render(g);
 		}
 		
 		

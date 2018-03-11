@@ -16,7 +16,7 @@ public class Menu {
 	public static void init(){
 		buttons = new Rectangle[Constants.MENU_BUTTONS.length];
 		for(int i = 0; i < Constants.MENU_BUTTONS.length; i++){
-			buttons[i] = new Rectangle((Game.WIDTH - Assets.buttonWidth) / 2, 100 + (Assets.buttonHeight + 10) * i, Assets.buttonWidth, Assets.buttonHeight);
+			buttons[i] = new Rectangle((Game.getInstance().width - Assets.buttonWidth) / 2, 100 + (Assets.buttonHeight + 10) * i, Assets.buttonWidth, Assets.buttonHeight);
 		}
 	}
 	
@@ -25,7 +25,7 @@ public class Menu {
 		Graphics2D g2d = (Graphics2D) g;
 		g.setColor(Color.RED);
 		g.setFont(new Font("arial", Font.BOLD, 28));
-		g.drawString("Game Invaders - The Game", Game.WIDTH / 5, Constants.HUD_HEIGHT);
+		g.drawString("Game Invaders - The Game", Game.getInstance().width / 5, Constants.HUD_HEIGHT);
 		Rectangle button;
 		for(int i = 0; i < Constants.MENU_BUTTONS.length; i++){
 			button = buttons[i];

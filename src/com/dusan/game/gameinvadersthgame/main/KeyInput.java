@@ -23,44 +23,51 @@ public class KeyInput extends KeyAdapter{
 	
 	private HashMap<Integer, Boolean> keysPressed;
 	private Player player;
+	private int keyCode;
+	
+	public void keyTyped(KeyEvent e){
+		if(Game.getInstance().state == STATE.ENDGAME_SCREEN){
+			EndGameScreen.type(e.getKeyChar());
+		}
+	}
 	
 	public void keyPressed(KeyEvent e){
 		if(Game.getInstance().state == STATE.GAME){
 //			Dunno man, it was nice and clean using the state only in Game if possible. Another reason to ONLY set shouldShoot and shouldMoveInDirection from KeyInput class,
 //			and then Player::tick() should be the only one calling shoot() / move() / stop(), which could then be Player private methods.
 			player = GameObjectManager.getPlayer();
-			if(!(player == null || player.isDying)){
 //			if((player != null) && !player.isDying){
 				
-				int keyCode = e.getKeyCode();
-				keysPressed.put(keyCode, true);
-				if(keyCode == KeyEvent.VK_LEFT){
-					player.move(Player.PlayerMove.LEFT);
-				}
-				if(keyCode == KeyEvent.VK_RIGHT){
-					player.move(Player.PlayerMove.RIGHT);
-				}
-				
-				if(keyCode == KeyEvent.VK_SPACE){
-					player.shoot();
-				}
+			keyCode = e.getKeyCode();
+			keysPressed.put(keyCode, true);
+			if(keyCode == KeyEvent.VK_LEFT){
+				player.move(Player.PlayerMove.LEFT);
+			}
+			if(keyCode == KeyEvent.VK_RIGHT){
+				player.move(Player.PlayerMove.RIGHT);
+			}
+			
+			if(keyCode == KeyEvent.VK_SPACE){
+				player.shoot();
+			}
 
-				if(keyCode == KeyEvent.VK_ESCAPE){
-					System.exit(1);
-				}
+			if(keyCode == KeyEvent.VK_ESCAPE){
+				System.exit(1);
 			}
 		}
-		else{
-			
+		else if(Game.getInstance().state == STATE.ENDGAME_SCREEN) {
+			if(e.getKeyCode() == KeyEvent.VK_ENTER){
+				EndGameScreen.submit();
+			}
 		}
-		
+		else{}
 	}
 	
 	public void keyReleased(KeyEvent e){
-		player = GameObjectManager.getPlayer();
-		if(player != null || !player.isDying){
-			
-			int keyCode = e.getKeyCode();
+		if(Game.getInstance().state == STATE.GAME){
+			player = GameObjectManager.getPlayer();
+				
+			keyCode = e.getKeyCode();
 			if(keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT){
 				
 				keysPressed.put(keyCode, false);
@@ -75,8 +82,8 @@ public class KeyInput extends KeyAdapter{
 				}
 				
 			}
-			
 		}
+		else{}
 
 	}
 	

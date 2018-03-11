@@ -39,6 +39,14 @@ public class MouseInput implements MouseListener{
 				}
 			}
 		}
+		else if(Game.getInstance().state == STATE.ENDGAME_SCREEN){
+			int mx = e.getX();
+			int my = e.getY();
+			
+			if(mx >= EndGameScreen.RECTANGLES[EndGameScreen.SUBMIT].x && mx <= EndGameScreen.RECTANGLES[EndGameScreen.SUBMIT].x + EndGameScreen.RECTANGLES[EndGameScreen.SUBMIT].width && my >= EndGameScreen.RECTANGLES[EndGameScreen.SUBMIT].y && my <= EndGameScreen.RECTANGLES[EndGameScreen.SUBMIT].y + EndGameScreen.RECTANGLES[EndGameScreen.SUBMIT].height){
+				EndGameScreen.submit();	
+			}
+		}
 		
 	}
 

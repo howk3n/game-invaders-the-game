@@ -25,10 +25,10 @@ public class HUD {
 	
 	public void render(Graphics g){
 		g.setColor(Constants.DEFAULT_BACKGROUND_COLOR);
-		g.fillRect(0, 0, Game.WIDTH, Constants.HUD_HEIGHT);
+		g.fillRect(0, 0, Game.getInstance().width, Constants.HUD_HEIGHT);
 		g.setColor(Color.white);
-		g.drawString("Score: " + Game.score, Constants.HUD_HEIGHT / 2, Constants.HUD_HEIGHT / 2);
-		g.drawString("Lives left: " + Player.lives, Game.WIDTH - Constants.HUD_HEIGHT * 2, Constants.HUD_HEIGHT / 2);
+		g.drawString("Score: " + Game.getInstance().score, Constants.HUD_HEIGHT / 2, Constants.HUD_HEIGHT / 2);
+		g.drawString("Lives left: " + Player.lives, Game.getInstance().width - Constants.HUD_HEIGHT * 2, Constants.HUD_HEIGHT / 2);
 	}
 
 }

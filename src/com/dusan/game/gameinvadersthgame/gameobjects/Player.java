@@ -57,8 +57,8 @@ public class Player extends GameObject {
 		
 //		GameObjectManager.removeObject(this);
 		System.out.println(this.getX() + ": currentX");
-		System.out.println(Game.PLAYER_STARTING_X + ": should be new X");
-		this.setX(Game.PLAYER_STARTING_X);
+		System.out.println(Game.getInstance().playerStartingX + ": should be new X");
+		this.setX(Game.getInstance().playerStartingX);
 		System.out.println(this.getX() + ": new X");
 		
 		lives--;

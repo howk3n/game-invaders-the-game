@@ -29,7 +29,7 @@ public class PlayerBullet extends Bullet {
 			GameObjectManager.removeObject(this);
 		}
 		
-		x = MyMath.clamp(x, 0, Game.WIDTH);
+		x = MyMath.clamp(x, 0, Game.getInstance().width);
 		
 	}
 	

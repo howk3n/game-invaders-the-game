@@ -78,7 +78,7 @@ public class CollisionManager {
 						Random random = new Random();
 						int minX = Math.min(currentObject.getX(), otherObject.getX());
 						int maxX = Math.max(currentObject.getX(), otherObject.getX());
-						if(minX > 0 && maxX < Game.WIDTH){
+						if(minX > 0 && maxX < Game.getInstance().width){
 							for(int k = 0; k < 50; k++){
 								int val = random.nextInt(maxX - minX);
 								int velX = 0;
