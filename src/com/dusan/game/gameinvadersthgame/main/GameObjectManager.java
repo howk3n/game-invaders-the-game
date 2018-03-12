@@ -222,8 +222,13 @@ public class GameObjectManager {
 		
 		if(numberOfAliens == 0){
 			Game.getInstance().nextLevel();
-		}else{
-			gameSpeed = 1 + (1 + Game.getInstance().currentLevel) * 0.015 * (Constants.getTotalAliensPerLevel(Game.getInstance().currentLevel) - numberOfAliens);
+		}
+		else{
+			double levelSpeedCoefficient = 1 + (Game.getInstance().currentLevel * 0.2);
+			double maxLevelSpeedModifier = 2;
+			double totalAliens = Constants.getTotalAliensPerLevel(Game.getInstance().currentLevel);
+			double speedAlg = levelSpeedCoefficient * (maxLevelSpeedModifier - numberOfAliens / totalAliens);
+			gameSpeed = MyMath.clamp(speedAlg, Constants.MINIMUM_GAME_SPEED, Constants.MAXIMUM_GAME_SPEED);
 		}
 		
 		if(gameTimer >= 1 / gameSpeed){

@@ -8,6 +8,9 @@ public class Constants {
 	public static final int DEFAULT_SCREEN_HEIGHT = 640;
 	public static final int HUD_HEIGHT = 60;
 	
+	public static final double MINIMUM_GAME_SPEED = 1;
+	public static final double MAXIMUM_GAME_SPEED = 4.4;
+	
 	public static final int JUNIOR = 0;
 	public static final int MEDIOR = 1;
 	public static final int SENIOR = 2;

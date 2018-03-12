@@ -8,16 +8,25 @@ import java.awt.Rectangle;
 public class MyMath {
 
 	public final static int clamp(int var, int min, int max){
-		
 		if(var >= max){
-			return var = max;
+			return max;
 		}
 		else if(var <= min){
-			return var = min;
+			return min;
 		}
 		else return var;
-		
 	}
+	
+	public final static double clamp(double var, double min, double max){
+		if(var >= max){
+			return max;
+		}
+		else if(var <= min){
+			return min;
+		}
+		else return var;
+	}
+	
 	
 	public final static void drawCenteredString(Graphics g, String text, Rectangle rect, Font font) {
 	    // Get the FontMetrics
