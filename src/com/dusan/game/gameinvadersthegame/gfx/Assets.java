@@ -3,13 +3,14 @@ package com.dusan.game.gameinvadersthegame.gfx;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
-import com.dusan.game.gameinvadersthgame.common.Constants;
-import com.dusan.game.gameinvadersthgame.main.Game;
+import com.dusan.game.gameinvadersthegame.common.Constants;
+import com.dusan.game.gameinvadersthegame.main.Game;
 
 
 public class Assets {
@@ -17,20 +18,23 @@ public class Assets {
 	public static HashMap<String, BufferedImage> menuButtons = new HashMap<String, BufferedImage>();
 	public static int buttonWidth;
 	public static int buttonHeight;
+	
 	public static void init(){
 		buttonHeight = Game.getInstance().height / 4;
 		buttonWidth = buttonHeight * Constants.ORIGINAL_MENU_BUTTON_WIDTH / Constants.ORIGINAL_MENU_BUTTON_HEIGHT;
 		for(int i = 0; i < Constants.MENU_BUTTONS.length; i++){
-			System.out.println("/textures/"+ Constants.MENU_BUTTONS[i].toLowerCase() +"button.png");
-			BufferedImage resizedButton = resize(loadImage("/textures/"+ Constants.MENU_BUTTONS[i].toLowerCase() +"button.png"), buttonWidth, buttonHeight);
+			BufferedImage resizedButton = resize(loadImage("\\res\\textures\\" + Constants.MENU_BUTTONS[i].toLowerCase() + "button.png"), buttonWidth, buttonHeight);
 			menuButtons.put(Constants.MENU_BUTTONS[i], resizedButton);
 		}
 	}
 	
 	private static BufferedImage loadImage(String path) {
+		File image;
 		
 		try {
-			return ImageIO.read(Assets.class.getResource(path));
+			String workingDir = System.getProperty("user.dir") + path;
+			image = new File(workingDir);
+			return ImageIO.read(image);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
